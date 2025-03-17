@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model Movie {
+  id            String         @id @default(cuid())
+  title         String         @db.VarChar(120)
+  genre         String         @db.VarChar(120)
+  duration      Int
+  country       String         @db.VarChar(40)
+  language      String         @db.VarChar(40)
+  releaseYear   Int
+  description   String         @db.VarChar(355)
+
+  persons       PersonOnMovie[]
+
+  rating        Rating?
+
+  studio        Studio?        @relation(fields: [studioId], references: [id])
+  studioId      String?
+
+  award         Award[]
+
+}
+
+model Person {
+  id            String         @id @default(cuid())
+  dateOfBirth   String         @db.VarChar(30)
+  name          String         @db.VarChar(60)
+  nationality   String         @db.VarChar(40)
+  role          String         @db.VarChar(40)
+
+  movies        PersonOnMovie[]
+}
+
+model PersonOnMovie {
+  movieId       String         @db.VarChar(30)
+  personId      String         @db.VarChar(30)
+  movie         Movie          @relation(fields: [movieId], references: [id])
+  person        Person         @relation(fields: [personId], references: [id])
+
+  @@id([movieId, personId])
+}
+
+model Rating {
+  id            String         @id @default(cuid())
+  ratingType    String         @db.VarChar(30)
+  reviewCount   Int
+
+  ratingValue   Decimal        @default(0) @db.Decimal(2, 1)
+  movie         Movie?         @relation(fields: [movieId], references: [id])
+  movieId       String?        @unique
+}
+
+model Studio {
+  id            String         @id @default(cuid())
+  studioName    String         @db.VarChar(60)
+  country       String         @db.VarChar(40)
+  foundedYear   Int
+  movies        Movie[]
+}
+
+model Award {
+  id            String         @id @default(cuid())
+  awardName     String         @db.VarChar(30)
+  category      String         @db.VarChar(70)
+  awardDate     String         @db.VarChar(30)
+  movie         Movie?         @relation(fields: [movieId], references: [id])
+  movieId       String?        @unique
+}
