@@ -5,49 +5,6 @@ import Image from "next/image";
 export default function Page1(){
     return (
         <div>
-              <div className="grid grid-cols-2 grid-rows-1 gap-8 ml-60 mt-10 text-2xl mr-60">
-        <div className="h-100 w-230  bg-zinc-800 rounded-2xl text-3xl">
-            <p className="p-3 pl-20 border-b-3 border-zinc-700 font-bold text-yellow-300">Фильмы по студиям</p>
-            <div className="flex place-content-between items-center h-13  border-b-3 border-zinc-700 pl-20 pr-20"> 
-                <p className=" text-amber-50 text-3xl">Студия</p>
-                <p className=" text-amber-50 text-3xl">Количество фильмов</p>
-            </div>
-            <div className="flex place-content-between items-center h-13  border-b-3 border-zinc-700 pl-20 pr-20">
-                <p className="text-amber-50 text-2xl">DATA</p>
-                <p className="text-amber-50 text-2xl">DATA</p>
-            </div>
-            <div className="flex justify-evenly items-center h-20">
-                <Pagination total={10} 
-                style={{
-                  "--pagination-active-bg": "#ffdf20", // Цвет фона активного элемента
-                  "--pagination-active-color": "#171717", // Цвет текста активного элемента
-                }}
-                size="xl"
-                />
-            </div>
-        </div>
-        <div className="h-100 w-230  bg-zinc-800 rounded-2xl text-3xl">
-            <p className=" p-3 pl-20 border-b-3 border-zinc-700 font-bold text-yellow-300">Фильмы у персон</p>
-            <div className="flex place-content-between items-center h-13  border-b-3 border-zinc-700 pl-20 pr-20"> 
-                <p className=" text-amber-50 text-3xl">Персона</p>
-                <p className=" text-amber-50 text-3xl">Количество фильмов</p>
-            </div>
-            <div className="flex place-content-between items-center h-13  border-b-3 border-zinc-700 pl-20 pr-20">
-                <p className="text-amber-50 text-2xl">DATA</p>
-                <p className="text-amber-50 text-2xl">DATA</p>
-            </div>
-            <div className="flex justify-evenly items-center h-20">
-                <Pagination 
-                total={10}
-                size="xl"
-                style={{
-                  "--pagination-active-bg": "#ffdf20", // Цвет фона активного элемента
-                  "--pagination-active-color": "#171717", // Цвет текста активного элемента
-                }}
-                />
-            </div>
-        </div>
-      </div>
         <h1 className="ml-60 mt-10 text-4xl font-bold text-yellow-300"  >Общая статистика</h1>
         <div className="grid grid-flow-col grid-rows-2 gap-8 ml-60 mt-10 text-2xl mr-60">
   
@@ -141,6 +98,50 @@ export default function Page1(){
             </div>
           </div>
       </div>
+      <div className="grid grid-cols-2 grid-rows-1 gap-8 ml-60 mt-10 text-2xl mr-60">
+      <div className="h-100 w-230  bg-zinc-800 rounded-2xl text-3xl">
+            <p className=" p-3 pl-20 border-b-3 border-zinc-700 font-bold text-yellow-300">Фильмы по студиям</p>
+            <div className="flex place-content-between items-center h-13  border-b-3 border-zinc-700 pl-20 pr-20"> 
+                <p className=" text-amber-50 text-3xl">Фильмы</p>
+                <p className=" text-amber-50 text-3xl">Количество фильмов</p>
+            </div>
+            <div className="flex place-content-between items-center h-13  border-b-3 border-zinc-700 pl-20 pr-20">
+                <p className="text-amber-50 text-2xl">DATA</p>
+                <p className="text-amber-50 text-2xl">DATA</p>
+            </div>
+            <div className="flex justify-evenly items-center h-20">
+                <Pagination 
+                total={10}
+                size="xl"
+                style={{
+                  "--pagination-active-bg": "#ffdf20",
+                  "--pagination-active-color": "#171717",
+                }}
+                />
+            </div>
+        </div>
+        <div className="h-100 w-230  bg-zinc-800 rounded-2xl text-3xl">
+            <p className=" p-3 pl-20 border-b-3 border-zinc-700 font-bold text-yellow-300">Фильмы у персон</p>
+            <div className="flex place-content-between items-center h-13  border-b-3 border-zinc-700 pl-20 pr-20"> 
+                <p className=" text-amber-50 text-3xl">Персона</p>
+                <p className=" text-amber-50 text-3xl">Количество фильмов</p>
+            </div>
+            <div className="flex place-content-between items-center h-13  border-b-3 border-zinc-700 pl-20 pr-20">
+                <p className="text-amber-50 text-2xl">DATA</p>
+                <p className="text-amber-50 text-2xl">DATA</p>
+            </div>
+            <div className="flex justify-evenly items-center h-20">
+                <Pagination 
+                total={10}
+                size="xl"
+                style={{
+                  "--pagination-active-bg": "#ffdf20",
+                  "--pagination-active-color": "#171717",
+                }}
+                />
+            </div>
+        </div>
       </div>
+    </div>
     );
 }

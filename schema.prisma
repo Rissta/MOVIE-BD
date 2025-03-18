@@ -44,7 +44,7 @@ model PersonOnMovie {
   personId      String         @db.VarChar(30)
   movie         Movie          @relation(fields: [movieId], references: [id])
   person        Person         @relation(fields: [personId], references: [id])
-
+  
   @@id([movieId, personId])
 }
 

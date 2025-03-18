@@ -56,15 +56,15 @@ export default function Home() {
           </div>
         </div>
           <div className=" text-3xl ml-40 mr-40 mt-10 bg-zinc-800 rounded-2xl">
-              <p className="text-amber-50 p-6 pl-20 border-b-3 border-zinc-700">Результат поиска</p>
-          <div className="flex justify-evenly items-center h-20  border-b-3 border-zinc-700"> 
+              <p className="text-amber-50 p-6 pl-20 border-b-3 border-zinc-800">Результат поиска</p>
+          <div className="flex justify-evenly items-center h-20  border-b-3 border-zinc-800"> 
             <p className=" text-yellow-300  text-2xl">Название</p>
             <p className=" text-yellow-300 text-2xl">Жанр</p>
             <p className=" text-yellow-300  text-2xl">Год выхода</p>
             <p className=" text-yellow-300  text-2xl">Рейтинг</p>
             <p className=" text-yellow-300 text-2xl">Длительность</p>
           </div>
-          <div className="flex justify-evenly items-center h-20  border-b-3 border-zinc-700">
+          <div className="flex justify-evenly items-center h-20  border-b-3 border-zinc-800">
             <p className="text-amber-50 text-2xl">DATA</p>
             <p className="text-amber-50 text-2xl">DATA</p>
             <p className="text-amber-50 text-2xl">DATA</p>
