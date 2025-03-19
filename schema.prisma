@@ -52,8 +52,8 @@ model Rating {
   id            String         @id @default(cuid())
   ratingType    String         @db.VarChar(30)
   reviewCount   Int
-
   ratingValue   Decimal        @default(0) @db.Decimal(2, 1)
+
   movie         Movie?         @relation(fields: [movieId], references: [id])
   movieId       String?        @unique
 }
@@ -63,6 +63,7 @@ model Studio {
   studioName    String         @db.VarChar(60)
   country       String         @db.VarChar(40)
   foundedYear   Int
+
   movies        Movie[]
 }
 
@@ -71,6 +72,7 @@ model Award {
   awardName     String         @db.VarChar(30)
   category      String         @db.VarChar(70)
   awardDate     String         @db.VarChar(30)
+  
   movie         Movie?         @relation(fields: [movieId], references: [id])
   movieId       String?        @unique
 }
