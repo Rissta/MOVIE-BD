@@ -1,10 +1,10 @@
-"use client"; // Обязательно для использования React-хуков в Next.js 13+
+"use client";
 
 import { useState } from "react";
-import { Pagination } from "@mantine/core";
 import { IconAward, IconBuildings, IconDatabase, IconMovie, IconStar, IconUsersGroup } from "@tabler/icons-react";
+import { Pagination } from "@mantine/core";
 
-export default function statistic() {
+export default function Statistic() {
   // Функция для разбиения массива на чанки
   function chunk(array, size) {
     if (!array.length) {
@@ -25,7 +25,7 @@ export default function statistic() {
     }));
 
   // Разбиваем данные на страницы по 5 элементов на страницу
-  const studiosPages = chunk(studiosData, 5);
+  const studiosPages = chunk(studiosData, 7);
 
   // Состояние для отслеживания активной страницы студий
   const [activeStudioPage, setActiveStudioPage] = useState(1);
@@ -43,7 +43,7 @@ export default function statistic() {
     }));
 
   // Разбиваем данные на страницы по 5 элементов на страницу
-  const personsPages = chunk(personsData, 5);
+  const personsPages = chunk(personsData, 7);
 
   // Состояние для отслеживания активной страницы персон
   const [activePersonPage, setActivePersonPage] = useState(1);
@@ -52,160 +52,110 @@ export default function statistic() {
   const currentPersonPageData = personsPages[activePersonPage - 1];
 
   return (
-    <div>
-      <h1 className="ml-60 mt-6 text-4xl font-bold text-yellow-300">Общая статистика</h1>
-      <div className="grid grid-flow-col grid-rows-2 gap-8 ml-60 mt-6 text-2xl mr-60">
+    <div className="text-amber-50">
+      <h1 className="ml-60 mt-6 text-2xl font-bold text-yellow-300">Общая статистика</h1>
+      <div className="grid grid-cols-3 gap-8 ml-60 mt-6 mr-60">
         {/* Блок "Фильмы" */}
-        <div className="h-55 w-150 bg-zinc-800 text-amber-50 rounded-4xl">
-          <div className="flex place-content-between m-4">
-            <p className="font-bold text-yellow-300">Фильмы</p>
-            <IconMovie className="float-end text-yellow-300 rounded-4xl" size={40} />
+        <div className="h-auto w-full bg-zinc-800 rounded-4xl p-4">
+          <div className="flex justify-between items-center mb-4">
+            <p className="font-bold text-yellow-300 text-xl">Фильмы</p>
+            <IconMovie className="text-yellow-300" size={40} />
           </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество фильмов</p>
-            <p>123</p>
+          <div className="flex justify-between items-center mb-2">
+            <p className="text-lg">Количество фильмов</p>
+            <p className="text-lg">123</p>
           </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество жанров</p>
-            <p>123</p>
+          <div className="flex justify-between items-center mb-2">
+            <p className="text-lg">Количество жанров</p>
+            <p className="text-lg">123</p>
           </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество языков</p>
-            <p>123</p>
-          </div>
-        </div>
-
-        {/* Остальные блоки (Люди, Студии, Рейтинг, Награды, База данных) */}
-        <div className="h-55 w-150 bg-zinc-800 text-amber-50 rounded-4xl">
-          <div className="flex place-content-between m-4">
-            <p className="font-bold text-yellow-300">Люди</p>
-            <IconUsersGroup className="float-end text-yellow-300 rounded-4xl" size={40} />
-          </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество людей</p>
-            <p>123</p>
-          </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество национальностей</p>
-            <p>123</p>
+          <div className="flex justify-between items-center">
+            <p className="text-lg">Количество языков</p>
+            <p className="text-lg">123</p>
           </div>
         </div>
 
-        <div className="h-55 w-150 bg-zinc-800 text-amber-50 rounded-4xl">
-          <div className="flex place-content-between m-4">
-            <p className="font-bold text-yellow-300">Студии</p>
-            <IconBuildings className="float-end text-yellow-300 rounded-4xl" size={40} />
+        {/* Блок "Люди" */}
+        <div className="h-auto w-full bg-zinc-800 rounded-4xl p-4">
+          <div className="flex justify-between items-center mb-4">
+            <p className="font-bold text-yellow-300 text-xl">Люди</p>
+            <IconUsersGroup className="text-yellow-300" size={40} />
           </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество студий</p>
-            <p>123</p>
+          <div className="flex justify-between items-center mb-2">
+            <p className="text-lg">Количество людей</p>
+            <p className="text-lg">123</p>
           </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество стран</p>
-            <p>123</p>
-          </div>
-        </div>
-
-        <div className="h-55 w-150 bg-zinc-800 text-amber-50 rounded-4xl">
-          <div className="flex place-content-between m-4">
-            <p className="font-bold text-yellow-300">Рейтинг</p>
-            <IconStar className="float-end text-yellow-300 rounded-4xl" size={40} />
-          </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество отзывов</p>
-            <p>123</p>
-          </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Средний рейтинг</p>
-            <p>123</p>
+          <div className="flex justify-between items-center">
+            <p className="text-lg">Количество национальностей</p>
+            <p className="text-lg">123</p>
           </div>
         </div>
 
-        <div className="h-55 w-150 bg-zinc-800 text-amber-50 rounded-4xl">
-          <div className="flex place-content-between m-4">
-            <p className="font-bold text-yellow-300">Награды</p>
-            <IconAward className="float-end text-yellow-300 rounded-4xl" size={40} />
+        {/* Блок "Студии" */}
+        <div className="h-auto w-full bg-zinc-800 rounded-4xl p-4">
+          <div className="flex justify-between items-center mb-4">
+            <p className="font-bold text-yellow-300 text-xl">Студии</p>
+            <IconBuildings className="text-yellow-300" size={40} />
           </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество наград</p>
-            <p>123</p>
+          <div className="flex justify-between items-center mb-2">
+            <p className="text-lg">Количество студий</p>
+            <p className="text-lg">123</p>
           </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество категорий</p>
-            <p>123</p>
-          </div>
-        </div>
-
-        <div className="h-55 w-150 bg-zinc-800 text-amber-50 rounded-4xl">
-          <div className="flex place-content-between m-4">
-            <p className="font-bold text-yellow-300">База данных</p>
-            <IconDatabase className="float-end text-yellow-300 rounded-4xl" size={40} />
-          </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество записей</p>
-            <p>123</p>
+          <div className="flex justify-between items-center">
+            <p className="text-lg">Количество стран</p>
+            <p className="text-lg">123</p>
           </div>
         </div>
       </div>
 
       {/* Блок с пагинацией */}
-      <div className="grid grid-cols-2 grid-rows-1 gap-8 ml-60 mt-10 text-2xl mr-60">
+      <div className="grid grid-cols-2 gap-8 ml-60 mt-10 mr-60">
         {/* Левый блок с пагинацией (студии) */}
-        <div className="h-114 w-230 bg-zinc-800 rounded-2xl text-3xl">
-          <p className="flex justify-evenly pt-3 pb-3 font-bold text-yellow-300"> Фильмы по студиям </p>
-          <div className="flex place-content-between items-center h-13 border-b-3 border-zinc-700 ml-10 mr-10 text-3xl">
-            <p className="text-amber-50 text-2xl ml-20">Студия</p>
-            <p className="text-amber-50 text-2xl mr-20">Количество фильмов</p>
+        <div className="h-auto w-full bg-zinc-800 rounded-2xl p-4">
+          <p className="text-center text-yellow-300 font-bold text-2xl mb-4">Фильмы по студиям</p>
+          <div className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
+            <p className="text-amber-50 text-xl ml-4">Студия</p>
+            <p className="text-amber-50 text-xl mr-4">Количество фильмов</p>
           </div>
-          {/* Отображение данных текущей страницы студий */}
           {currentStudioPageData?.map((item) => (
-            <div
-              key={item.id}
-              className="flex place-content-between items-center h-13 border-b-3 border-zinc-700 ml-20 mr-20"
-            >
-              <p className="text-amber-50 text-xl ml-10">{item.studio}</p>
-              <p className="text-amber-50 text-xl mr-10">{item.moviesCountStudio}</p>
+            <div key={item.id} className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
+              <p className="text-amber-50 text-base ml-4">{item.studio}</p>
+              <p className="text-amber-50 text-base mr-4">{item.moviesCountStudio}</p>
             </div>
           ))}
-          {/* Пагинация для студий */}
-          <div className="flex justify-evenly items-center h-20">
+          <div className="flex justify-center mt-4">
             <Pagination
-              total={studiosPages.length} // Общее количество страниц
-              value={activeStudioPage} // Текущая страница
-              onChange={setActiveStudioPage} // Обработчик изменения страницы
-              size="xl"
+              total={studiosPages.length}
+              value={activeStudioPage}
+              onChange={setActiveStudioPage}
+              size="lg"
               color="dark.4"
-              styles={{	dots:{ color: "#52525c"}}}
+              styles={{ dots: { color: "#52525c" } }}
             />
           </div>
         </div>
 
         {/* Правый блок с пагинацией (персоны) */}
-        <div className="h-114 w-230 bg-zinc-800 rounded-2xl text-3xl">
-          <p className="flex justify-evenly pt-3 pb-3 font-bold text-yellow-300"> Фильмы у персон </p>
-          <div className="flex place-content-between items-center h-13 border-b-3 border-zinc-700 ml-10 mr-10 text-3xl">
-            <p className="text-amber-50 text-2xl ml-20">Персона</p>
-            <p className="text-amber-50 text-2xl mr-20">Количество фильмов</p>
+        <div className="h-auto w-full bg-zinc-800 rounded-2xl p-4">
+          <p className="text-center text-yellow-300 font-bold text-2xl mb-4">Фильмы у персон</p>
+          <div className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
+            <p className="text-amber-50 text-xl ml-4">Персона</p>
+            <p className="text-amber-50 text-xl mr-4">Количество фильмов</p>
           </div>
-          {/* Отображение данных текущей страницы персон */}
           {currentPersonPageData?.map((item) => (
-            <div
-              key={item.id}
-              className="flex place-content-between items-center h-13 border-b-3 border-zinc-700 ml-20 mr-20"
-            >
-              <p className="text-amber-50 text-xl ml-10">{item.person}</p>
-              <p className="text-amber-50 text-xl mr-10">{item.moviesCountPerson}</p>
+            <div key={item.id} className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
+              <p className="text-amber-50 text-base ml-4">{item.person}</p>
+              <p className="text-amber-50 text-base mr-4">{item.moviesCountPerson}</p>
             </div>
           ))}
-          {/* Пагинация для персон */}
-          <div className="flex justify-evenly items-center h-20">
+          <div className="flex justify-center mt-4">
             <Pagination
-              total={personsPages.length} // Общее количество страниц
-              value={activePersonPage} // Текущая страница
-              onChange={setActivePersonPage} // Обработчик изменения страницы
-              size="xl"
+              total={personsPages.length}
+              value={activePersonPage}
+              onChange={setActivePersonPage}
+              size="lg"
               color="dark.4"
-              styles={{	dots:{ color: "#52525c"}}}
+              styles={{ dots: { color: "#52525c" } }}
             />
           </div>
         </div>

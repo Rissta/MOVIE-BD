@@ -1,5 +1,4 @@
 "use client"; // Обязательно для использования React-хуков в Next.js 13+
-
 import { useState } from "react";
 import { Button, Input, Modal, Pagination, Select, Text } from "@mantine/core";
 import {
@@ -60,7 +59,7 @@ export default function Search() {
   const [selectedFilm, setSelectedFilm] = useState(null);
 
   return (
-    <div>
+    <div className="w-full max-w-[120vw] mx-auto">
       {/* Модальное окно "Описание" */}
       <Modal
         opened={openedDescription}
@@ -130,12 +129,17 @@ export default function Search() {
       </Modal>
 
       {/* Основная часть интерфейса */}
-      <div className="mt-12 ml-180 mr-180">
-        <div className="flex">
-          <div className="w-220">
-            <Input radius={20} size="xl" placeholder="Поиск по названию" leftSection={<IconSearch size={30} />} />
+      <div className="mt-12">
+        <div className="flex justify-center items-center">
+          <div className="w-1/3">
+            <Input
+              radius={20}
+              size="xl"
+              placeholder="Поиск по названию"
+              leftSection={<IconSearch size={30} />}
+            />
           </div>
-          <div className="bg-yellow-300 rounded-2xl float-end ml-6">
+          <div className="bg-yellow-300 rounded-2xl ml-6">
             <Button variant="subtle" color="dark.8" size="xl" leftSection={<IconSearch size={30} />}>
               Поиск
             </Button>
@@ -143,13 +147,12 @@ export default function Search() {
         </div>
       </div>
 
-      <div className="flex justify-self-center items-center">
-        <div className="grid grid-cols-3 grid-rows-2 gap-x-10 gap-y-6 text-2xl mt-6">
+      <div className="flex justify-center items-center mt-6">
+        <div className="grid grid-cols-3 gap-x-10 gap-y-6 text-2xl">
           <Select
             size="lg"
             radius="md"
             allowDeselect
-            className="w-150 text-amber-50"
             label="Жанр"
             placeholder="Выберите жанр"
             data={["React", "Angular", "Vue", "Svelte"]}
@@ -162,7 +165,6 @@ export default function Search() {
             size="lg"
             radius="md"
             allowDeselect
-            className="w-150 text-amber-50"
             label="Персона"
             placeholder="Выберите персону"
             data={["React", "Angular", "Vue", "Svelte", "1", "12", "13", "14", "15", "16", "17", "18", "19"]}
@@ -174,7 +176,6 @@ export default function Search() {
           <Select
             size="lg"
             radius="md"
-            className="w-150 text-amber-50"
             label="Студия"
             placeholder="Выберите студию"
             data={["Без сортировки", "Сначала новые", "Сначала старые", "От А до Я", "От Я до А"]}
@@ -187,7 +188,6 @@ export default function Search() {
             size="lg"
             radius="md"
             allowDeselect
-            className="w-150 text-amber-50"
             label="Страна"
             placeholder="Выберите страну"
             data={["React", "Angular", "Vue", "Svelte"]}
@@ -200,7 +200,6 @@ export default function Search() {
             size="lg"
             radius="md"
             allowDeselect
-            className="w-150 text-amber-50"
             label="Год"
             placeholder="Выберите год"
             data={["React", "Angular", "Vue", "Svelte"]}
@@ -209,13 +208,11 @@ export default function Search() {
               dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
             }}
           />
-          <Input.Wrapper label="Рейтинг" className="text-amber-50" size="md">
+          <Input.Wrapper label="Рейтинг" size="md">
             <Input
               size="lg"
               radius="md"
-              className="w-150 text-amber-50"
               placeholder="От"
-              data={["React", "Angular", "Vue", "Svelte"]}
               styles={{
                 input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
               }}
@@ -224,7 +221,7 @@ export default function Search() {
         </div>
       </div>
 
-      <div className="flex justify-self-center items-center mt-8 mb-6">
+      <div className="flex justify-center items-center mt-8 mb-6">
         <div className="bg-zinc-800 rounded-2xl">
           <Button variant="subtle" color="white" size="lg" leftSection={<IconFilterOff size={30} />}>
             Сбросить фильтр
@@ -325,14 +322,14 @@ export default function Search() {
       </div>
 
       {/* Пагинация */}
-      <div className="flex justify-evenly items-center mt-6">
+      <div className="flex justify-center items-center mt-6">
         <Pagination
           total={data.length} // Общее количество страниц
           value={activePage} // Текущая страница
           onChange={setActivePage} // Обработчик изменения страницы
           color="dark.4"
           size="xl"
-          styles={{	dots:{ color: "#52525c"}}}
+          styles={{ dots: { color: "#52525c" } }}
         />
       </div>
     </div>

@@ -47,7 +47,7 @@ export default function Search() {
   const [selectedPerson, setSelectedPerson] = useState(null);
 
   return (
-    <div>
+    <div className="w-full max-w-[120vw] mx-auto">
       {/* Модальное окно "Название фильма" */}
       <Modal
         opened={openedMovies}
@@ -74,12 +74,12 @@ export default function Search() {
       </Modal>
 
       {/* Основная часть интерфейса */}
-      <div className="mt-12 ml-180 mr-180">
-        <div className="flex">
-          <div className="w-220">
+      <div className="mt-12">
+        <div className="flex justify-center items-center">
+          <div className="w-1/3">
             <Input radius={20} size="xl" placeholder="Поиск по ФИО" leftSection={<IconSearch size={30} />} />
           </div>
-          <div className="bg-yellow-300 rounded-2xl float-end ml-6">
+          <div className="bg-yellow-300 rounded-2xl ml-6">
             <Button variant="subtle" color="dark.8" size="xl" leftSection={<IconSearch size={30} />}>
               Поиск
             </Button>
@@ -87,15 +87,14 @@ export default function Search() {
         </div>
       </div>
 
-      <div className="flex justify-self-center items-center">
-        <div className="grid grid-cols-3 gap-x-10 gap-y-6 text-2xl mt-6">
+      <div className="flex justify-center items-center mt-6">
+        <div className="grid grid-cols-3 gap-x-10 gap-y-6 text-2xl">
           <Select
             size="lg"
             radius="md"
             allowDeselect
-            className="w-150 text-amber-50"
             label="Фильм"
-            placeholder="Выберите название фильма"
+            placeholder="Выберете фильм"
             data={["React", "Angular", "Vue", "Svelte"]}
             styles={{
               input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
@@ -106,7 +105,6 @@ export default function Search() {
             size="lg"
             radius="md"
             allowDeselect
-            className="w-150 text-amber-50"
             label="Роль"
             placeholder="Выберете роль"
             data={["React", "Angular", "Vue", "Svelte", "1", "12", "13", "14", "15", "16", "17", "18", "19"]}
@@ -118,7 +116,6 @@ export default function Search() {
           <Select
             size="lg"
             radius="md"
-            className="w-150 text-amber-50"
             label="Национальность"
             placeholder="Выберете национальность"
             data={["Без сортировки", "Сначала новые", "Сначала старые", "От А до Я", "От Я до А"]}
@@ -130,7 +127,7 @@ export default function Search() {
         </div>
       </div>
 
-      <div className="flex justify-self-center items-center mt-8 mb-6">
+      <div className="flex justify-center items-center mt-8 mb-6">
         <div className="bg-zinc-800 rounded-2xl">
           <Button variant="subtle" color="white" size="lg" leftSection={<IconFilterOff size={30} />}>
             Сбросить фильтр
@@ -146,8 +143,8 @@ export default function Search() {
       {/* Блок с данными */}
       <div>
         {currentPageData?.map((item) => (
-          <div key={item.id} className="ml-65 mr-65 mt-2 bg-zinc-800 pt-4 pb-4 mb-3 rounded-2xl pr-10 pl-10">
-            <div className="grid grid-cols-5 gap-x-4 text-2xl text-amber-50 h-18">
+          <div key={item.id} className="ml-10 mr-10 mt-2 bg-zinc-800 pt-4 pb-4 mb-3 rounded-2xl pr-10 pl-10">
+            <div className="grid grid-cols-5 gap-x-4 text-2xl text-amber-50 h-auto">
               <div className="items-center">
                 <p className="font-extralight flex justify-center items-center text-base">ФИО</p>
                 <p className="h-10 flex justify-center items-center rounded-2xl text-xl mt-3 text-balance">{item.name}</p>
@@ -189,7 +186,7 @@ export default function Search() {
       </div>
 
       {/* Пагинация */}
-      <div className="flex justify-evenly items-center mt-6">
+      <div className="flex justify-center items-center mt-6">
         <Pagination
           total={personData.length} // Общее количество страниц
           value={activePage} // Текущая страница

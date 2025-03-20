@@ -39,11 +39,11 @@ export default function AwardDirectory() {
   const currentPageData = awardData[activePage - 1];
 
   return (
-    <div>
+    <div className="w-full max-w-[120vw] mx-auto">
       {/* Основная часть интерфейса */}
-      <div className="mt-12 ml-180 mr-180">
-        <div className="flex">
-          <div className="w-220">
+      <div className="mt-12">
+        <div className="flex justify-center items-center">
+          <div className="w-1/3">
             <Input
               radius={20}
               size="xl"
@@ -51,44 +51,44 @@ export default function AwardDirectory() {
               leftSection={<IconSearch size={30} />}
             />
           </div>
-          <div className="bg-yellow-300 rounded-2xl float-end ml-6">
+          <div className="bg-yellow-300 rounded-2xl ml-6">
             <Button variant="subtle" color="dark.8" size="xl" leftSection={<IconSearch size={30} />}>
               Поиск
             </Button>
           </div>
         </div>
       </div>
-      <div className="flex justify-self-center items-center">
-        <div className="grid grid-cols-2 gap-x-10 gap-y-6 text-2xl mt-6">
-            <Select
+
+      <div className="flex justify-center items-center mt-6">
+        <div className="grid grid-cols-2 gap-x-10 gap-y-6 text-2xl">
+          <Select
             size="lg"
             radius="md"
             allowDeselect
-            className="w-150 text-amber-50"
             label="Категория"
             placeholder="Выберите категорию"
             data={["Лучший фильм", "Лучшая режиссура", "Лучшая актерская игра", "Лучший сценарий"]}
             styles={{
-                input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
-                dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
+              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
+              dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
             }}
-            />
-            <Select
+          />
+          <Select
             size="lg"
             radius="md"
             allowDeselect
-            className="w-150 text-amber-50"
             label="Фильм"
             placeholder="Выберите фильм"
             data={["Фильм 1", "Фильм 2", "Фильм 3", "Фильм 4"]}
             styles={{
-                input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
-                dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
+              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
+              dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
             }}
-            />
+          />
         </div>
-    </div>
-      <div className="flex justify-self-center items-center mt-8 mb-6">
+      </div>
+
+      <div className="flex justify-center items-center mt-8 mb-6">
         <div className="bg-zinc-800 rounded-2xl">
           <Button variant="subtle" color="white" size="lg" leftSection={<IconFilterOff size={30} />}>
             Сбросить фильтр
@@ -104,8 +104,8 @@ export default function AwardDirectory() {
       {/* Блок с данными */}
       <div>
         {currentPageData?.map((award) => (
-          <div key={award.id} className="ml-65 mr-65 mt-2 bg-zinc-800 pt-4 pb-4 mb-3 rounded-2xl pr-10 pl-10">
-            <div className="grid grid-cols-4 gap-x-4 text-2xl text-amber-50 h-18">
+          <div key={award.id} className="ml-10 mr-10 mt-2 bg-zinc-800 pt-4 pb-4 mb-3 rounded-2xl pr-10 pl-10">
+            <div className="grid grid-cols-4 gap-x-4 text-2xl text-amber-50 h-auto">
               <div className="items-center">
                 <p className="font-extralight flex justify-center items-center text-base">Название награды</p>
                 <p className="h-10 flex justify-center items-center rounded-2xl text-xl mt-3 text-balance">{award.awardName}</p>
@@ -128,7 +128,7 @@ export default function AwardDirectory() {
       </div>
 
       {/* Пагинация */}
-      <div className="flex justify-evenly items-center mt-6">
+      <div className="flex justify-center items-center mt-6">
         <Pagination
           total={awardData.length} // Общее количество страниц
           value={activePage} // Текущая страница
