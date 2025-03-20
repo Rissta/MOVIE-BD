@@ -237,7 +237,7 @@ export default function Search() {
       {/* Блок с данными */}
       <div>
         {currentPageData?.map((item) => (
-          <div key={item.id} className="ml-15 mr-15 mt-2 bg-zinc-800 pt-4 pb-4 mb-3 rounded-2xl pr-10 pl-10">
+          <div key={item.id} className="ml-15 mr-15 mt-2 bg-zinc-800 pt-4 pb-4 mb-3 rounded-2xl pr-10 pl-10 border-zinc-600 border-2">
             <div className="grid grid-cols-8 gap-x-4 text-2xl text-amber-50 h-18">
               <div className="items-center">
                 <p className="font-extralight flex justify-center items-center text-base">Название</p>

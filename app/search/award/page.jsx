@@ -104,8 +104,8 @@ export default function AwardDirectory() {
       {/* Блок с данными */}
       <div>
         {currentPageData?.map((award) => (
-          <div key={award.id} className="ml-10 mr-10 mt-2 bg-zinc-800 pt-4 pb-4 mb-3 rounded-2xl pr-10 pl-10">
-            <div className="grid grid-cols-4 gap-x-4 text-2xl text-amber-50 h-auto">
+          <div key={award.id} className="ml-10 mr-10 mt-2 bg-zinc-800 pt-4 pb-4 mb-3 rounded-2xl pr-10 pl-10 shadow-xl shadow-zinc-500/10">
+            <div className="grid grid-cols-4 gap-x-4 text-2xl text-amber-50 h-auto ">
               <div className="items-center">
                 <p className="font-extralight flex justify-center items-center text-base">Название награды</p>
                 <p className="h-10 flex justify-center items-center rounded-2xl text-xl mt-3 text-balance">{award.awardName}</p>

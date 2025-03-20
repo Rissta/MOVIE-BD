@@ -56,7 +56,7 @@ export default function Statistic() {
       <h1 className="ml-60 mt-6 text-2xl font-bold text-yellow-300">Общая статистика</h1>
       <div className="grid grid-cols-3 gap-8 ml-60 mt-6 mr-60">
         {/* Блок "Фильмы" */}
-        <div className="h-auto w-full bg-zinc-800 rounded-4xl p-4">
+        <div className="h-auto w-full bg-zinc-800 rounded-4xl p-4 shadow-xl shadow-zinc-500/20">
           <div className="flex justify-between items-center mb-4">
             <p className="font-bold text-yellow-300 text-xl">Фильмы</p>
             <IconMovie className="text-yellow-300" size={40} />
@@ -76,7 +76,7 @@ export default function Statistic() {
         </div>
 
         {/* Блок "Люди" */}
-        <div className="h-auto w-full bg-zinc-800 rounded-4xl p-4">
+        <div className="h-auto w-full bg-zinc-800 rounded-4xl p-4 shadow-xl shadow-zinc-500/20">
           <div className="flex justify-between items-center mb-4">
             <p className="font-bold text-yellow-300 text-xl">Люди</p>
             <IconUsersGroup className="text-yellow-300" size={40} />
@@ -92,7 +92,7 @@ export default function Statistic() {
         </div>
 
         {/* Блок "Студии" */}
-        <div className="h-auto w-full bg-zinc-800 rounded-4xl p-4">
+        <div className="h-auto w-full bg-zinc-800 rounded-4xl p-4 shadow-xl shadow-zinc-500/20">
           <div className="flex justify-between items-center mb-4">
             <p className="font-bold text-yellow-300 text-xl">Студии</p>
             <IconBuildings className="text-yellow-300" size={40} />
@@ -111,7 +111,7 @@ export default function Statistic() {
       {/* Блок с пагинацией */}
       <div className="grid grid-cols-2 gap-8 ml-60 mt-10 mr-60">
         {/* Левый блок с пагинацией (студии) */}
-        <div className="h-auto w-full bg-zinc-800 rounded-2xl p-4">
+        <div className="h-auto w-full bg-zinc-800 rounded-2xl p-4 shadow-xl shadow-zinc-500/20">
           <p className="text-center text-yellow-300 font-bold text-2xl mb-4">Фильмы по студиям</p>
           <div className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
             <p className="text-amber-50 text-xl ml-4">Студия</p>
@@ -136,7 +136,7 @@ export default function Statistic() {
         </div>
 
         {/* Правый блок с пагинацией (персоны) */}
-        <div className="h-auto w-full bg-zinc-800 rounded-2xl p-4">
+        <div className="h-auto w-full bg-zinc-800 rounded-2xl p-4 shadow-xl shadow-zinc-500/20">
           <p className="text-center text-yellow-300 font-bold text-2xl mb-4">Фильмы у персон</p>
           <div className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
             <p className="text-amber-50 text-xl ml-4">Персона</p>
