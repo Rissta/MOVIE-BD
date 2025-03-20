@@ -56,94 +56,94 @@ export default function statistic() {
       <h1 className="ml-60 mt-6 text-4xl font-bold text-yellow-300">Общая статистика</h1>
       <div className="grid grid-flow-col grid-rows-2 gap-8 ml-60 mt-6 text-2xl mr-60">
         {/* Блок "Фильмы" */}
-        <div className="h-55 w-150 bg-zinc-800 text-amber-50 rounded-4xl">
+        <div className="h-48 w-150 bg-zinc-800 text-amber-50 rounded-4xl">
           <div className="flex place-content-between m-4">
             <p className="font-bold text-yellow-300">Фильмы</p>
             <IconMovie className="float-end text-yellow-300 rounded-4xl" size={40} />
           </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество фильмов</p>
-            <p>123</p>
+          <div className="flex place-content-between mt-2 mr-4 ml-4">
+            <p className="text-xl">Количество фильмов</p>
+            <p className="text-xl">123</p>
           </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество жанров</p>
-            <p>123</p>
+          <div className="flex place-content-between mt-2 mr-4 ml-4">
+            <p className="text-xl">Количество жанров</p>
+            <p className="text-xl">123</p>
           </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество языков</p>
-            <p>123</p>
+          <div className="flex place-content-between mt-2 mr-4 ml-4">
+            <p className="text-xl">Количество языков</p>
+            <p className="text-xl">123</p>
           </div>
         </div>
 
         {/* Остальные блоки (Люди, Студии, Рейтинг, Награды, База данных) */}
-        <div className="h-55 w-150 bg-zinc-800 text-amber-50 rounded-4xl">
+        <div className="h-48 w-150 bg-zinc-800 text-amber-50 rounded-4xl">
           <div className="flex place-content-between m-4">
             <p className="font-bold text-yellow-300">Люди</p>
             <IconUsersGroup className="float-end text-yellow-300 rounded-4xl" size={40} />
           </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество Людей</p>
-            <p>123</p>
+          <div className="flex place-content-between mt-2 mr-4 ml-4">
+            <p className="text-xl">Количество Людей</p>
+            <p className="text-xl">123</p>
           </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество национальностей</p>
-            <p>123</p>
+          <div className="flex place-content-between mt-2 mr-4 ml-4">
+            <p className="text-xl">Количество национальностей</p>
+            <p className="text-xl">123</p>
           </div>
         </div>
 
-        <div className="h-55 w-150 bg-zinc-800 text-amber-50 rounded-4xl">
+        <div className="h-48 w-150 bg-zinc-800 text-amber-50 rounded-4xl">
           <div className="flex place-content-between m-4">
             <p className="font-bold text-yellow-300">Студии</p>
             <IconBuildings className="float-end text-yellow-300 rounded-4xl" size={40} />
           </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество студий</p>
-            <p>123</p>
+          <div className="flex place-content-between mt-2 mr-4 ml-4">
+            <p className="text-xl">Количество студий</p>
+            <p className="text-xl">123</p>
           </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество стран</p>
-            <p>123</p>
+          <div className="flex place-content-between mt-2 mr-4 ml-4">
+            <p className="text-xl">Количество стран</p>
+            <p className="text-xl">123</p>
           </div>
         </div>
 
-        <div className="h-55 w-150 bg-zinc-800 text-amber-50 rounded-4xl">
+        <div className="h-48 w-150 bg-zinc-800 text-amber-50 rounded-4xl">
           <div className="flex place-content-between m-4">
             <p className="font-bold text-yellow-300">Рейтинг</p>
             <IconStar className="float-end text-yellow-300 rounded-4xl" size={40} />
           </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество отзывов</p>
-            <p>123</p>
+          <div className="flex place-content-between mt-2 mr-4 ml-4">
+            <p className="text-xl">Количество отзывов</p>
+            <p className="text-xl">123</p>
           </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Средний рейтинг</p>
-            <p>123</p>
+          <div className="flex place-content-between mt-2 mr-4 ml-4">
+            <p className="text-xl">Средний рейтинг</p>
+            <p className="text-xl">123</p>
           </div>
         </div>
 
-        <div className="h-55 w-150 bg-zinc-800 text-amber-50 rounded-4xl">
+        <div className="h-48 w-150 bg-zinc-800 text-amber-50 rounded-4xl">
           <div className="flex place-content-between m-4">
             <p className="font-bold text-yellow-300">Награды</p>
             <IconAward className="float-end text-yellow-300 rounded-4xl" size={40} />
           </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество наград</p>
-            <p>123</p>
+          <div className="flex place-content-between mt-2 mr-4 ml-4">
+            <p className="text-xl">Количество наград</p>
+            <p className="text-xl">123</p>
           </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество категорий</p>
-            <p>123</p>
+          <div className="flex place-content-between mt-2 mr-4 ml-4">
+            <p className="text-xl">Количество категорий</p>
+            <p className="text-xl">123</p>
           </div>
         </div>
 
-        <div className="h-55 w-150 bg-zinc-800 text-amber-50 rounded-4xl">
+        <div className="h-48 w-150 bg-zinc-800 text-amber-50 rounded-4xl">
           <div className="flex place-content-between m-4">
             <p className="font-bold text-yellow-300">База данных</p>
             <IconDatabase className="float-end text-yellow-300 rounded-4xl" size={40} />
           </div>
-          <div className="flex place-content-between m-4">
-            <p className="">Количество записей</p>
-            <p>123</p>
+          <div className="flex place-content-between mt-2 mr-4 ml-4">
+            <p className="text-xl">Количество записей</p>
+            <p className="text-xl">123</p>
           </div>
         </div>
       </div>
@@ -175,6 +175,7 @@ export default function statistic() {
               onChange={setActiveStudioPage} // Обработчик изменения страницы
               size="xl"
               color="dark.4"
+              styles={{	dots:{ color: "#52525c"}}}
             />
           </div>
         </div>
@@ -204,6 +205,7 @@ export default function statistic() {
               onChange={setActivePersonPage} // Обработчик изменения страницы
               size="xl"
               color="dark.4"
+              styles={{	dots:{ color: "#52525c"}}}
             />
           </div>
         </div>

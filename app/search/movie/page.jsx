@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { Button, Input, Modal, Pagination, Select, Text } from "@mantine/core";
 import {
-  IconAdjustmentsHorizontal,
-  IconBuildings,
   IconFilter,
   IconFilterOff,
   IconLicense,
@@ -242,8 +240,8 @@ export default function Search() {
       {/* Блок с данными */}
       <div>
         {currentPageData?.map((item) => (
-          <div key={item.id} className="ml-35 mr-35 mt-2 bg-zinc-800 pt-4 pb-4 mb-3 rounded-2xl pr-10 pl-10">
-            <div className="grid grid-cols-8 gap-x-4 text-2xl text-amber-50">
+          <div key={item.id} className="ml-15 mr-15 mt-2 bg-zinc-800 pt-4 pb-4 mb-3 rounded-2xl pr-10 pl-10">
+            <div className="grid grid-cols-8 gap-x-4 text-2xl text-amber-50 h-18">
               <div className="items-center">
                 <p className="font-extralight flex justify-center items-center text-base">Название</p>
                 <p className="h-10 flex justify-center items-center rounded-2xl text-xl mt-3 text-balance">{item.title}</p>
@@ -283,7 +281,7 @@ export default function Search() {
                   </div>
                 </div>
               </div>
-              <div className="tems-center">
+              <div className="items-center">
                 <p className="font-extralight flex justify-center items-center text-base">Персоны</p>
                 <div className="flex justify-center">
                   <div className="bg-zinc-900 rounded-2xl mt-3">
@@ -302,7 +300,7 @@ export default function Search() {
                   </div>
                 </div>
               </div>
-              <div className="tems-center">
+              <div className="items-center">
                 <p className="font-extralight flex justify-center items-center text-base">Описание</p>
                 <div className="flex justify-center">
                   <div className="bg-zinc-900 rounded-2xl mt-3">
@@ -334,6 +332,7 @@ export default function Search() {
           onChange={setActivePage} // Обработчик изменения страницы
           color="dark.4"
           size="xl"
+          styles={{	dots:{ color: "#52525c"}}}
         />
       </div>
     </div>
