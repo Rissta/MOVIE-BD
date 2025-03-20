@@ -82,7 +82,7 @@ export default function statistic() {
             <IconUsersGroup className="float-end text-yellow-300 rounded-4xl" size={40} />
           </div>
           <div className="flex place-content-between m-4">
-            <p className="">Количество Людей</p>
+            <p className="">Количество людей</p>
             <p>123</p>
           </div>
           <div className="flex place-content-between m-4">
