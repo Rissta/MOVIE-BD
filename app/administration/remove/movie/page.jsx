@@ -133,7 +133,7 @@ export default function Search() {
 
       {/* Основная часть интерфейса */}
       <div className="mt-12">
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center mb-6">
           <div className="w-1/3">
             <Input
               radius={20}
@@ -143,8 +143,13 @@ export default function Search() {
             />
           </div>
           <div className="bg-yellow-300 rounded-2xl ml-6">
-            <Button variant="subtle" color="dark.8" size="xl" leftSection={<IconSearch size={30} />}>
+            <Button variant="subtle" color="dark.8" size="xl" radius="lg" leftSection={<IconSearch size={30} />}>
               Поиск
+            </Button>
+          </div>
+          <div className="bg-zinc-800 rounded-2xl ml-6">
+            <Button variant="subtle" color="white" size="xl" radius="lg" leftSection={<IconFilter size={30} />} onClick={openFilters}>
+              Фильтры
             </Button>
           </div>
         </div>
@@ -235,14 +240,6 @@ export default function Search() {
           </Input.Wrapper>
         </div>
       </Modal>
-
-      <div className="flex justify-center items-center mt-8 mb-6">
-          <div className="bg-zinc-800 rounded-2xl ml-8">
-            <Button variant="subtle" color="white" size="lg" leftSection={<IconFilter size={30} />} onClick={openFilters}>
-              Фильтры
-            </Button>
-          </div>
-      </div>
 
       {/* Блок с данными */}
       <div>
