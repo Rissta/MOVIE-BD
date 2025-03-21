@@ -1,5 +1,5 @@
 "use client"; // Обязательно для использования React-хуков в Next.js 13+
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button, Input, Modal, Pagination, Select, Text } from "@mantine/core";
 import {
   IconFilter,
@@ -8,21 +8,36 @@ import {
   IconMessage,
   IconSearch,
   IconUsersGroup,
+  IconX,
 } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
+
+// Интерфейс для данных о фильме
+interface Film {
+  id: number;
+  title: string;
+  rating: string;
+  duration: string;
+  country: string;
+  studio: string;
+  description: string;
+  genres: string;
+  persons: { name: string; role: string }[];
+}
 
 export default function Search() {
   const [openedDescription, { open: openDescription, close: closeDescription }] = useDisclosure(false); // Состояние для модального окна "Описание"
   const [openedPersons, { open: openPersons, close: closePersons }] = useDisclosure(false); // Состояние для модального окна "Персоны"
   const [openedGenres, { open: openGenres, close: closeGenres }] = useDisclosure(false); // Состояние для модального окна "Жанры"
+  const [openedFilters, { open: openFilters, close: closeFilters }] = useDisclosure(false); // Состояние для модального окна "Фильтры"
 
   // Пример данных для фильмов
-  const rawData = Array(30)
+  const rawData: Film[] = Array(30)
     .fill(0)
     .map((_, index) => ({
       id: index,
       title: `Фильм ${index + 1}`,
-      rating: Math.floor(Math.random() * 5 + 5).toFixed(1),
+      rating: (Math.floor(Math.random() * 5 + 5)).toFixed(1),
       duration: `${Math.floor(Math.random() * 120 + 60)} минут`,
       country: ["Россия", "США", "Китай", "Индия"][Math.floor(Math.random() * 4)],
       studio: ["Disney", "Warner Bros", "Universal", "Sony"][Math.floor(Math.random() * 4)],
@@ -37,7 +52,7 @@ export default function Search() {
     }));
 
   // Функция для разбиения массива на чанки
-  function chunk(array, size) {
+  function chunk<T>(array: T[], size: number): T[][] {
     if (!array.length) {
       return [];
     }
@@ -47,16 +62,16 @@ export default function Search() {
   }
 
   // Разбиваем данные на страницы по 5 элементов на страницу
-  const data = chunk(rawData, 5);
+  const data: Film[][] = chunk(rawData, 5);
 
   // Состояние для отслеживания активной страницы
-  const [activePage, setActivePage] = useState(1);
+  const [activePage, setActivePage] = useState<number>(1);
 
   // Получаем данные для текущей страницы
-  const currentPageData = data[activePage - 1];
+  const currentPageData: Film[] | undefined = data[activePage - 1];
 
   // Состояние для отслеживания выбранного фильма
-  const [selectedFilm, setSelectedFilm] = useState(null);
+  const [selectedFilm, setSelectedFilm] = useState<Film | null>(null);
 
   return (
     <div className="w-full max-w-[120vw] mx-auto">
@@ -130,7 +145,7 @@ export default function Search() {
 
       {/* Основная часть интерфейса */}
       <div className="mt-12">
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center mb-6">
           <div className="w-1/3">
             <Input
               radius={20}
@@ -140,14 +155,39 @@ export default function Search() {
             />
           </div>
           <div className="bg-yellow-300 rounded-2xl ml-6">
-            <Button variant="subtle" color="dark.8" size="xl" leftSection={<IconSearch size={30} />}>
+            <Button variant="subtle" color="dark.8" size="xl" radius="lg" leftSection={<IconSearch size={30} />}>
               Поиск
+            </Button>
+          </div>
+          <div className="bg-zinc-800 rounded-2xl ml-6">
+            <Button
+              variant="subtle"
+              color="white"
+              size="xl"
+              radius="lg"
+              leftSection={<IconFilter size={30} />}
+              onClick={openFilters}
+            >
+              Фильтры
             </Button>
           </div>
         </div>
       </div>
 
-      <div className="flex justify-center items-center mt-6">
+      {/* Модальное окно "Фильтры" */}
+      <Modal
+        opened={openedFilters}
+        onClose={closeFilters}
+        title="Фильтры"
+        centered
+        size="2xl"
+        radius={"lg"}
+        styles={{
+          header: { backgroundColor: "#171717" },
+          title: { color: "#c0c0c4", backgroundColor: "#171717", fontSize: "25px" },
+          body: { backgroundColor: "#171717", color: "#c0c0c4", fontSize: "20px" },
+        }}
+      >
         <div className="grid grid-cols-3 gap-x-10 gap-y-6 text-2xl">
           <Select
             size="lg"
@@ -219,26 +259,12 @@ export default function Search() {
             />
           </Input.Wrapper>
         </div>
-      </div>
-
-      <div className="flex justify-center items-center mt-8 mb-6">
-        <div className="bg-zinc-800 rounded-2xl">
-          <Button variant="subtle" color="white" size="lg" leftSection={<IconFilterOff size={30} />}>
-            Сбросить фильтр
-          </Button>
-        </div>
-        <div className="bg-yellow-300 rounded-2xl ml-8">
-          <Button variant="subtle" color="dark.8" size="lg" leftSection={<IconFilter size={30} />}>
-            Применить фильтр
-          </Button>
-        </div>
-      </div>
-
+      </Modal>
       {/* Блок с данными */}
       <div>
         {currentPageData?.map((item) => (
-          <div key={item.id} className="ml-15 mr-15 mt-2 bg-zinc-800 pt-4 pb-4 mb-3 rounded-2xl pr-10 pl-10 border-zinc-600 border-2">
-            <div className="grid grid-cols-8 gap-x-4 text-2xl text-amber-50 h-18">
+          <div key={item.id} className="ml-15 mr-15 mt-2 bg-zinc-800 pt-4 pb-4 mb-3 rounded-2xl pr-10 pl-10">
+            <div className="grid grid-cols-9 gap-x-4 text-2xl text-amber-50 h-18">
               <div className="items-center">
                 <p className="font-extralight flex justify-center items-center text-base">Название</p>
                 <p className="h-10 flex justify-center items-center rounded-2xl text-xl mt-3 text-balance">{item.title}</p>
@@ -314,6 +340,18 @@ export default function Search() {
                       <IconMessage size={30} />
                     </Button>
                   </div>
+                </div>
+              </div>
+              <div className="flex justify-center items-center">
+                <div className="bg-yellow-300 rounded-4xl">
+                  <Button
+                    size="lg"
+                    variant="subtle"
+                    color="dark.8"
+                    radius="xl"
+                  >
+                    <IconX size={35} />
+                  </Button>
                 </div>
               </div>
             </div>

@@ -1,22 +1,31 @@
 "use client"; // Обязательно для использования React-хуков в Next.js 13+
-import { useState } from "react";
+import React, { useState } from "react";
 import { Input, MultiSelect, Button } from "@mantine/core";
 import { IconCheck, IconCircleX } from "@tabler/icons-react";
 
+// Интерфейс для данных о персоне
+interface Person {
+  name: string;
+  nationality: string;
+  role: string;
+  birthDate: string;
+  movies: string[];
+}
+
 export default function AddPeople() {
   // Состояние для хранения выбранных значений
-  const [selectedValues, setSelectedValues] = useState([]);
+  const [selectedValues, setSelectedValues] = useState<string[]>([]);
 
   // Состояние для отслеживания текста поиска
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState<string>("");
 
   // Обработчик изменения выбранных значений
-  const handleChange = (values) => {
+  const handleChange = (values: string[]) => {
     setSelectedValues(values);
   };
 
   // Обработчик изменения текста поиска
-  const handleSearchChange = (value) => {
+  const handleSearchChange = (value: string) => {
     setSearchValue(value);
   };
 
@@ -79,11 +88,10 @@ export default function AddPeople() {
         onChange={handleChange} // Обработчик изменения выбранных значений
         searchValue={searchValue} // Значение поиска
         onSearchChange={handleSearchChange} // Обработчик изменения текста поиска
-        nothingFoundMessage={searchValue && !data.includes(searchValue) ? "Ничего не найдено" : null} // Сообщение при отсутствии совпадений
+        nothingFoundMessage={searchValue && !["React", "Angular", "Vue", "Svelte"].includes(searchValue) ? "Ничего не найдено" : null} // Сообщение при отсутствии совпадений
         styles={{
           input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
           dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
-          item: { color: "#71717b" },
           pill: { backgroundColor: "#ffdf20", color: "#171717", borderColor: "#ffdf20" },
         }}
       />

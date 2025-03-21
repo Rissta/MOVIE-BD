@@ -1,22 +1,32 @@
 "use client";
-
-import { useState } from "react";
+import React, { useState } from "react";
 import { IconAward, IconBuildings, IconDatabase, IconMovie, IconStar, IconUsersGroup } from "@tabler/icons-react";
 import { Pagination } from "@mantine/core";
 
+// Определяем интерфейсы для данных
+interface Studio {
+  id: number;
+  studio: string;
+  moviesCountStudio: number;
+}
+
+interface Person {
+  id: number;
+  person: string;
+  moviesCountPerson: number;
+}
+
 export default function Statistic() {
-  // Функция для разбиения массива на чанки
-  function chunk(array, size) {
-    if (!array.length) {
-      return [];
-    }
+  // Функция для разбиения массива на страницы
+  function chunk<T>(array: T[], size: number): T[][] {
+    if (!array.length) return [];
     const head = array.slice(0, size);
     const tail = array.slice(size);
     return [head, ...chunk(tail, size)];
   }
 
   // Создаем массив данных для студий
-  const studiosData = Array(30)
+  const studiosData: Studio[] = Array(30)
     .fill(0)
     .map((_, index) => ({
       id: index,
@@ -24,17 +34,17 @@ export default function Statistic() {
       moviesCountStudio: Math.floor(Math.random() * 50) + 1, // случайное количество фильмов
     }));
 
-  // Разбиваем данные на страницы по 5 элементов на страницу
-  const studiosPages = chunk(studiosData, 7);
+  // Разбиваем данные на страницы по 7 элементов на страницу
+  const studiosPages: Studio[][] = chunk(studiosData, 7);
 
   // Состояние для отслеживания активной страницы студий
-  const [activeStudioPage, setActiveStudioPage] = useState(1);
+  const [activeStudioPage, setActiveStudioPage] = useState<number>(1);
 
   // Получаем данные для текущей страницы студий
-  const currentStudioPageData = studiosPages[activeStudioPage - 1];
+  const currentStudioPageData: Studio[] | undefined = studiosPages[activeStudioPage - 1];
 
   // Создаем массив данных для персон
-  const personsData = Array(30)
+  const personsData: Person[] = Array(30)
     .fill(0)
     .map((_, index) => ({
       id: index,
@@ -42,14 +52,14 @@ export default function Statistic() {
       moviesCountPerson: Math.floor(Math.random() * 50) + 1, // случайное количество фильмов
     }));
 
-  // Разбиваем данные на страницы по 5 элементов на страницу
-  const personsPages = chunk(personsData, 7);
+  // Разбиваем данные на страницы по 7 элементов на страницу
+  const personsPages: Person[][] = chunk(personsData, 7);
 
   // Состояние для отслеживания активной страницы персон
-  const [activePersonPage, setActivePersonPage] = useState(1);
+  const [activePersonPage, setActivePersonPage] = useState<number>(1);
 
   // Получаем данные для текущей страницы персон
-  const currentPersonPageData = personsPages[activePersonPage - 1];
+  const currentPersonPageData: Person[] | undefined = personsPages[activePersonPage - 1];
 
   return (
     <div className="text-amber-50">

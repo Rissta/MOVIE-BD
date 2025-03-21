@@ -1,23 +1,37 @@
 "use client"; // Обязательно для использования React-хуков в Next.js 13+
-import { useState } from "react";
+import React, { useState } from "react";
 import { Input, MultiSelect, Button, Select, Textarea } from "@mantine/core";
 import { IconCheck, IconCircleX, IconPlus } from "@tabler/icons-react";
 import Link from "next/link";
 
+// Интерфейс для данных о наградах
+interface Award {
+  name: string;
+  category: string;
+  awardDate: string;
+}
+
+// Интерфейс для данных о рейтинге
+interface Rating {
+  type: string;
+  reviewCount: string;
+  value: string;
+}
+
 export default function AddMovie() {
   // Состояние для хранения выбранных значений
-  const [selectedValues, setSelectedValues] = useState([]);
+  const [selectedValues, setSelectedValues] = useState<string[]>([]);
 
   // Состояние для отслеживания текста поиска
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState<string>("");
 
   // Обработчик изменения выбранных значений
-  const handleChange = (values) => {
+  const handleChange = (values: string[]) => {
     setSelectedValues(values);
   };
 
   // Обработчик изменения текста поиска
-  const handleSearchChange = (value) => {
+  const handleSearchChange = (value: string) => {
     setSearchValue(value);
   };
 
@@ -112,11 +126,10 @@ export default function AddMovie() {
           onChange={handleChange} // Обработчик изменения выбранных значений
           searchValue={searchValue} // Значение поиска
           onSearchChange={handleSearchChange} // Обработчик изменения текста поиска
-          nothingFoundMessage={searchValue && !data.includes(searchValue) ? "Ничего не найдено" : null} // Сообщение при отсутствии совпадений
+          nothingFoundMessage={searchValue && !["React", "Angular", "Vue", "Svelte"].includes(searchValue) ? "Ничего не найдено" : null} // Сообщение при отсутствии совпадений
           styles={{
             input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
             dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
-            item: { color: "#71717b" },
             pill: { backgroundColor: "#ffdf20", color: "#171717", borderColor: "#ffdf20" },
           }}
         />

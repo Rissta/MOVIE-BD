@@ -1,6 +1,6 @@
 "use client"; // Обязательно для использования React-хуков в Next.js 13+
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button, Input, Modal, Pagination, Select, Text } from "@mantine/core";
 import {
   IconFilter,
@@ -10,12 +10,21 @@ import {
 } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 
+// Интерфейс для данных о студиях
+interface Studio {
+  id: number;
+  studioName: string;
+  country: string;
+  foundationDate: string;
+  movies: string[];
+}
+
 export default function StudioDirectory() {
   // Состояния для модальных окон
   const [openedMovies, { open: openMovies, close: closeMovies }] = useDisclosure(false);
 
-  // Пример данных о студиях
-  const rawStudioData = Array(30)
+  // Пример данных о студиях с типизацией
+  const rawStudioData: Studio[] = Array(30)
     .fill(0)
     .map((_, index) => ({
       id: index,
@@ -26,7 +35,7 @@ export default function StudioDirectory() {
     }));
 
   // Функция для разбиения массива на страницы
-  function chunk(array, size) {
+  function chunk<T>(array: T[], size: number): T[][] {
     if (!array.length) return [];
     const head = array.slice(0, size);
     const tail = array.slice(size);
@@ -34,16 +43,16 @@ export default function StudioDirectory() {
   }
 
   // Разбиваем данные на страницы по 6 элементов
-  const studioData = chunk(rawStudioData, 6);
+  const studioData: Studio[][] = chunk(rawStudioData, 6);
 
   // Состояние для отслеживания активной страницы
-  const [activePage, setActivePage] = useState(1);
+  const [activePage, setActivePage] = useState<number>(1);
 
   // Данные текущей страницы
-  const currentPageData = studioData[activePage - 1];
+  const currentPageData: Studio[] | undefined = studioData[activePage - 1];
 
   // Состояние для выбранной студии
-  const [selectedStudio, setSelectedStudio] = useState(null);
+  const [selectedStudio, setSelectedStudio] = useState<Studio | null>(null);
 
   return (
     <div className="w-full max-w-[120vw] mx-auto">
@@ -62,13 +71,15 @@ export default function StudioDirectory() {
         }}
       >
         <Text size="lg" style={{ color: "#c0c0c4" }}>
-          {selectedStudio?.movies.length > 0
-            ? selectedStudio.movies.map((film, index) => (
-                <div key={index}>
-                  <p>{film}</p>
-                </div>
-              ))
-            : "Нет фильмов"}
+          {selectedStudio?.movies.length ? (
+            selectedStudio.movies.map((film, index) => (
+              <div key={index}>
+                <p>{film}</p>
+              </div>
+            ))
+          ) : (
+            <p>Нет фильмов</p>
+          )}
         </Text>
       </Modal>
 
@@ -98,7 +109,7 @@ export default function StudioDirectory() {
             radius="md"
             allowDeselect
             label="Фильм"
-            placeholder="Выберете фильм"
+            placeholder="Выберите фильм"
             data={["Фильм 1", "Фильм 2", "Фильм 3", "Фильм 4"]}
             styles={{
               input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
