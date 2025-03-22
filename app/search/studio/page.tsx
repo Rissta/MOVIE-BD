@@ -102,7 +102,7 @@ export default function StudioDirectory() {
         </div>
       </div>
 
-      <div className="flex justify-center items-center mt-6">
+      <div className="flex justify-center items-center mt-6 mb-10">
         <div className="grid grid-cols-2 gap-x-10 gap-y-6 text-2xl">
           <Select
             size="lg"
@@ -131,24 +131,11 @@ export default function StudioDirectory() {
         </div>
       </div>
 
-      <div className="flex justify-center items-center mt-8 mb-6">
-        <div className="bg-zinc-800 rounded-2xl">
-          <Button variant="subtle" color="white" size="lg" leftSection={<IconFilterOff size={30} />}>
-            Сбросить фильтр
-          </Button>
-        </div>
-        <div className="bg-yellow-300 rounded-2xl ml-8">
-          <Button variant="subtle" color="dark.8" size="lg" leftSection={<IconFilter size={30} />}>
-            Применить фильтр
-          </Button>
-        </div>
-      </div>
-
       {/* Блок с данными */}
       <div>
         {currentPageData?.map((studio) => (
-          <div key={studio.id} className="ml-10 mr-10 mt-2 bg-zinc-800 pt-4 pb-4 mb-3 rounded-2xl pr-10 pl-10">
-            <div className="grid grid-cols-4 gap-x-4 text-2xl text-amber-50 h-auto">
+          <div key={studio.id} className="ml-15 mr-15 mt-2 bg-zinc-800 pt-4 pb-4 mb-3 rounded-2xl pr-10 pl-10">
+            <div className="grid grid-cols-4 gap-x-4 text-2xl text-amber-50 h-18">
               <div className="items-center">
                 <p className="font-extralight flex justify-center items-center text-base">Название студии</p>
                 <p className="h-10 flex justify-center items-center rounded-2xl text-xl mt-3 text-balance">{studio.studioName}</p>

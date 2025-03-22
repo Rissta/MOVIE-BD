@@ -164,8 +164,8 @@ export default function Search() {
         </div>
       </div>
 
-      <div className="flex justify-center items-center mt-6">
-        <div className="grid grid-cols-3 gap-x-10 gap-y-6 text-2xl">
+      <div className="flex justify-center items-center mt-6 mb-10">
+        <div className="grid grid-cols-3 gap-x-10 text-2xl">
           <Select
             size="lg"
             radius="md"
@@ -242,20 +242,6 @@ export default function Search() {
           </Input.Wrapper>
         </div>
       </div>
-
-      <div className="flex justify-center items-center mt-8 mb-6">
-        <div className="bg-zinc-800 rounded-2xl">
-          <Button variant="subtle" color="white" size="lg" leftSection={<IconFilterOff size={30} />}>
-            Сбросить фильтр
-          </Button>
-        </div>
-        <div className="bg-yellow-300 rounded-2xl ml-8">
-          <Button variant="subtle" color="dark.8" size="lg" leftSection={<IconFilter size={30} />}>
-            Применить фильтр
-          </Button>
-        </div>
-      </div>
-
       {/* Блок с данными */}
       <div>
         {currentPageData?.map((item) => (

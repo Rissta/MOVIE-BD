@@ -12,12 +12,7 @@ import {
 } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
 
-// Интерфейсы для типизации данных
-interface Person {
-  name: string;
-  role: string;
-}
-
+// Интерфейс для данных о фильме
 interface Film {
   id: number;
   title: string;
@@ -27,14 +22,14 @@ interface Film {
   studio: string;
   description: string;
   genres: string;
-  persons: Person[];
+  persons: { name: string; role: string }[];
 }
 
 export default function Search() {
-  // Состояния модальных окон
-  const [openedDescription, { open: openDescription, close: closeDescription }] = useDisclosure(false);
-  const [openedPersons, { open: openPersons, close: closePersons }] = useDisclosure(false);
-  const [openedGenres, { open: openGenres, close: closeGenres }] = useDisclosure(false);
+  const [openedDescription, { open: openDescription, close: closeDescription }] = useDisclosure(false); // Состояние для модального окна "Описание"
+  const [openedPersons, { open: openPersons, close: closePersons }] = useDisclosure(false); // Состояние для модального окна "Персоны"
+  const [openedGenres, { open: openGenres, close: closeGenres }] = useDisclosure(false); // Состояние для модального окна "Жанры"
+  const [openedFilters, { open: openFilters, close: closeFilters }] = useDisclosure(false); // Состояние для модального окна "Фильтры"
 
   // Пример данных для фильмов
   const rawData: Film[] = Array(30)
@@ -56,21 +51,23 @@ export default function Search() {
       ],
     }));
 
-  // Функция для разбиения массива на страницы
+  // Функция для разбиения массива на чанки
   function chunk<T>(array: T[], size: number): T[][] {
-    if (!array.length) return [];
+    if (!array.length) {
+      return [];
+    }
     const head = array.slice(0, size);
     const tail = array.slice(size);
     return [head, ...chunk(tail, size)];
   }
 
-  // Разбиваем данные на страницы по 5 элементов
+  // Разбиваем данные на страницы по 5 элементов на страницу
   const data: Film[][] = chunk(rawData, 5);
 
   // Состояние для отслеживания активной страницы
   const [activePage, setActivePage] = useState<number>(1);
 
-  // Данные текущей страницы
+  // Получаем данные для текущей страницы
   const currentPageData: Film[] | undefined = data[activePage - 1];
 
   // Состояние для отслеживания выбранного фильма
@@ -148,7 +145,7 @@ export default function Search() {
 
       {/* Основная часть интерфейса */}
       <div className="mt-12">
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center mb-6">
           <div className="w-1/3">
             <Input
               radius={20}
@@ -158,22 +155,47 @@ export default function Search() {
             />
           </div>
           <div className="bg-yellow-300 rounded-2xl ml-6">
-            <Button variant="subtle" color="dark.8" size="xl" leftSection={<IconSearch size={30} />}>
+            <Button variant="subtle" color="dark.8" size="xl" radius="lg" leftSection={<IconSearch size={30} />}>
               Поиск
+            </Button>
+          </div>
+          <div className="bg-zinc-800 rounded-2xl ml-6">
+            <Button
+              variant="subtle"
+              color="white"
+              size="xl"
+              radius="lg"
+              leftSection={<IconFilter size={30} />}
+              onClick={openFilters}
+            >
+              Фильтры
             </Button>
           </div>
         </div>
       </div>
 
-      <div className="flex justify-center items-center mt-6 mb-10">
-        <div className="grid grid-cols-3 gap-x-10 text-2xl">
+      {/* Модальное окно "Фильтры" */}
+      <Modal
+        opened={openedFilters}
+        onClose={closeFilters}
+        title="Фильтры"
+        centered
+        size="2xl"
+        radius={"lg"}
+        styles={{
+          header: { backgroundColor: "#171717" },
+          title: { color: "#c0c0c4", backgroundColor: "#171717", fontSize: "25px" },
+          body: { backgroundColor: "#171717", color: "#c0c0c4", fontSize: "20px" },
+        }}
+      >
+        <div className="grid grid-cols-3 gap-x-10 gap-y-6 text-2xl">
           <Select
             size="lg"
             radius="md"
             allowDeselect
             label="Жанр"
             placeholder="Выберите жанр"
-            data={["Боевик", "Драма", "Комедия", "Триллер"]}
+            data={["React", "Angular", "Vue", "Svelte"]}
             styles={{
               input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
               dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
@@ -185,12 +207,7 @@ export default function Search() {
             allowDeselect
             label="Персона"
             placeholder="Выберите персону"
-            data={[
-              "Джон Доу",
-              "Джейн Смит",
-              "Майк Браун",
-              "Эмили Уотсон",
-            ]}
+            data={["React", "Angular", "Vue", "Svelte", "1", "12", "13", "14", "15", "16", "17", "18", "19"]}
             styles={{
               input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
               dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
@@ -201,7 +218,7 @@ export default function Search() {
             radius="md"
             label="Студия"
             placeholder="Выберите студию"
-            data={["Disney", "Warner Bros", "Universal", "Sony"]}
+            data={["Без сортировки", "Сначала новые", "Сначала старые", "От А до Я", "От Я до А"]}
             styles={{
               input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
               dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
@@ -213,7 +230,7 @@ export default function Search() {
             allowDeselect
             label="Страна"
             placeholder="Выберите страну"
-            data={["Россия", "США", "Китай", "Индия"]}
+            data={["React", "Angular", "Vue", "Svelte"]}
             styles={{
               input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
               dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
@@ -225,7 +242,7 @@ export default function Search() {
             allowDeselect
             label="Год"
             placeholder="Выберите год"
-            data={["2020", "2021", "2022", "2023"]}
+            data={["React", "Angular", "Vue", "Svelte"]}
             styles={{
               input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
               dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
@@ -242,7 +259,7 @@ export default function Search() {
             />
           </Input.Wrapper>
         </div>
-      </div>
+      </Modal>
       {/* Блок с данными */}
       <div>
         {currentPageData?.map((item) => (

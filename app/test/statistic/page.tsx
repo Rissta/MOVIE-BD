@@ -1,31 +1,22 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { IconAward, IconBuildings, IconDatabase, IconMovie, IconStar, IconUsersGroup } from "@tabler/icons-react";
 import { Pagination } from "@mantine/core";
 
 // Определяем интерфейсы для данных
 interface Studio {
-  studioName: string;
-  movieCount: number;
+  id: number;
+  studio: string;
+  moviesCountStudio: number;
 }
 
 interface Person {
-  personName: string;
-  movieCount: number;
+  id: number;
+  person: string;
+  moviesCountPerson: number;
 }
 
 export default function Statistic() {
-  // Состояния для хранения данных
-  const [movieCount, setMovieCount] = useState<number>(0);
-  const [genreCount, setGenreCount] = useState<number>(0);
-  const [languageCount, setLanguageCount] = useState<number>(0);
-  const [personCount, setPersonCount] = useState<number>(0);
-  const [nationalityCount, setNationalityCount] = useState<number>(0);
-  const [studioCount, setStudioCount] = useState<number>(0);
-  const [countryCount, setCountryCount] = useState<number>(0);
-  const [studios, setStudios] = useState<Studio[]>([]);
-  const [persons, setPersons] = useState<Person[]>([]);
-
   // Функция для разбиения массива на страницы
   function chunk<T>(array: T[], size: number): T[][] {
     if (!array.length) return [];
@@ -34,43 +25,41 @@ export default function Statistic() {
     return [head, ...chunk(tail, size)];
   }
 
+  // Создаем массив данных для студий
+  const studiosData: Studio[] = Array(30)
+    .fill(0)
+    .map((_, index) => ({
+      id: index,
+      studio: `Студия ${index + 1}`,
+      moviesCountStudio: Math.floor(Math.random() * 50) + 1, // случайное количество фильмов
+    }));
+
+  // Разбиваем данные на страницы по 7 элементов на страницу
+  const studiosPages: Studio[][] = chunk(studiosData, 7);
+
   // Состояние для отслеживания активной страницы студий
   const [activeStudioPage, setActiveStudioPage] = useState<number>(1);
-  const studiosPages: Studio[][] = chunk(studios, 7);
+
+  // Получаем данные для текущей страницы студий
   const currentStudioPageData: Studio[] | undefined = studiosPages[activeStudioPage - 1];
+
+  // Создаем массив данных для персон
+  const personsData: Person[] = Array(30)
+    .fill(0)
+    .map((_, index) => ({
+      id: index,
+      person: `Персона ${index + 1}`,
+      moviesCountPerson: Math.floor(Math.random() * 50) + 1, // случайное количество фильмов
+    }));
+
+  // Разбиваем данные на страницы по 7 элементов на страницу
+  const personsPages: Person[][] = chunk(personsData, 7);
 
   // Состояние для отслеживания активной страницы персон
   const [activePersonPage, setActivePersonPage] = useState<number>(1);
-  const personsPages: Person[][] = chunk(persons, 7);
+
+  // Получаем данные для текущей страницы персон
   const currentPersonPageData: Person[] | undefined = personsPages[activePersonPage - 1];
-
-  // Эффект для загрузки данных из API
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("/api/statistic");
-        if (!response.ok) {
-          throw new Error("Не удалось получить данные");
-        }
-        const data = await response.json();
-
-        // Установка данных в состояние
-        setMovieCount(data.movieCount);
-        setGenreCount(data.generCount);
-        setLanguageCount(data.languageCount);
-        setPersonCount(data.personCount);
-        setNationalityCount(data.nationalityCount);
-        setStudioCount(data.studioCount);
-        setCountryCount(data.countryCount);
-        setStudios(data.formattedStudios);
-        setPersons(data.formattedPersons);
-      } catch (error) {
-        console.error("Ошибка при выборке данных:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   return (
     <div className="text-amber-50">
@@ -84,15 +73,15 @@ export default function Statistic() {
           </div>
           <div className="flex justify-between items-center mb-2">
             <p className="text-lg">Количество фильмов</p>
-            <p className="text-lg">{movieCount}</p>
+            <p className="text-lg">123</p>
           </div>
           <div className="flex justify-between items-center mb-2">
             <p className="text-lg">Количество жанров</p>
-            <p className="text-lg">{genreCount}</p>
+            <p className="text-lg">123</p>
           </div>
           <div className="flex justify-between items-center">
             <p className="text-lg">Количество языков</p>
-            <p className="text-lg">{languageCount}</p>
+            <p className="text-lg">123</p>
           </div>
         </div>
 
@@ -104,11 +93,11 @@ export default function Statistic() {
           </div>
           <div className="flex justify-between items-center mb-2">
             <p className="text-lg">Количество людей</p>
-            <p className="text-lg">{personCount}</p>
+            <p className="text-lg">123</p>
           </div>
           <div className="flex justify-between items-center">
             <p className="text-lg">Количество национальностей</p>
-            <p className="text-lg">{nationalityCount}</p>
+            <p className="text-lg">123</p>
           </div>
         </div>
 
@@ -120,11 +109,11 @@ export default function Statistic() {
           </div>
           <div className="flex justify-between items-center mb-2">
             <p className="text-lg">Количество студий</p>
-            <p className="text-lg">{studioCount}</p>
+            <p className="text-lg">123</p>
           </div>
           <div className="flex justify-between items-center">
             <p className="text-lg">Количество стран</p>
-            <p className="text-lg">{countryCount}</p>
+            <p className="text-lg">123</p>
           </div>
         </div>
       </div>
@@ -139,9 +128,9 @@ export default function Statistic() {
             <p className="text-amber-50 text-xl mr-4">Количество фильмов</p>
           </div>
           {currentStudioPageData?.map((item) => (
-            <div key={item.studioName} className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
-              <p className="text-amber-50 text-base ml-4">{item.studioName}</p>
-              <p className="text-amber-50 text-base mr-4">{item.movieCount}</p>
+            <div key={item.id} className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
+              <p className="text-amber-50 text-base ml-4">{item.studio}</p>
+              <p className="text-amber-50 text-base mr-4">{item.moviesCountStudio}</p>
             </div>
           ))}
           <div className="flex justify-center mt-4">
@@ -164,9 +153,9 @@ export default function Statistic() {
             <p className="text-amber-50 text-xl mr-4">Количество фильмов</p>
           </div>
           {currentPersonPageData?.map((item) => (
-            <div key={item.personName} className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
-              <p className="text-amber-50 text-base ml-4">{item.personName}</p>
-              <p className="text-amber-50 text-base mr-4">{item.movieCount}</p>
+            <div key={item.id} className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
+              <p className="text-amber-50 text-base ml-4">{item.person}</p>
+              <p className="text-amber-50 text-base mr-4">{item.moviesCountPerson}</p>
             </div>
           ))}
           <div className="flex justify-center mt-4">
