@@ -56,7 +56,7 @@ export default function Statistic() {
 
         // Установка данных в состояние
         setMovieCount(data.movieCount);
-        setGenreCount(data.generCount);
+        setGenreCount(data.genreCount);
         setLanguageCount(data.languageCount);
         setPersonCount(data.personCount);
         setNationalityCount(data.nationalityCount);
