@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Button, Input, Modal, Pagination, Select, Text } from "@mantine/core";
+import { Button, Input, Loader, Modal, Pagination, Select, Text } from "@mantine/core";
 import {
   IconLicense,
   IconMessage,
@@ -391,7 +391,10 @@ useEffect(() => {
       </div>
      </div>
       : 
-      <p className="font-extralight flex justify-center items-center text-2xl text-amber-50">Загрузка...</p>
+      <div className="flex justify-center items-center mt-6">
+        <p className="font-extralight flex justify-center items-center text-2xl text-amber-50">Загрузка</p>
+        <Loader color="yellow" size="md" className="ml-2"/>
+    </div>
       }
     </div>
   );

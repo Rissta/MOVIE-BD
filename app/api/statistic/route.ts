@@ -4,9 +4,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
-    try {
-        const searchParams = request.nextUrl.searchParams;
-        
+    try {        
         // Первый блок статистики с таблицей фильмов
         const movieCount: number = await prisma.movie.count();
 

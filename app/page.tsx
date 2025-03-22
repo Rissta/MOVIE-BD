@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { IconAward, IconBuildings, IconDatabase, IconMovie, IconStar, IconUsersGroup } from "@tabler/icons-react";
-import { Pagination } from "@mantine/core";
+import { Loader, Pagination } from "@mantine/core";
 
 // Определяем интерфейсы для данных
 interface Studio {
@@ -103,7 +103,10 @@ export default function Statistic() {
             </div>
           </div>
           : 
-          <p className="font-extralight flex justify-center items-center text-xl text-amber-50">Загрузка...</p>
+          <div className="flex justify-center items-center mt-6">
+              <p className="font-extralight flex justify-center items-center text-xl text-amber-50">Загрузка</p>
+              <Loader color="yellow" size="sm" className="ml-2"/>
+          </div>
           }
         </div>
 
@@ -125,7 +128,10 @@ export default function Statistic() {
                 </div>
             </div>
             : 
-            <p className="font-extralight flex justify-center items-center text-xl text-amber-50">Загрузка...</p>
+            <div className="flex justify-center items-center mt-6">
+              <p className="font-extralight flex justify-center items-center text-xl text-amber-50">Загрузка</p>
+              <Loader color="yellow" size="sm" className="ml-2"/>
+          </div>
             }
         </div>
         {/* Блок "Студии" */}
@@ -146,7 +152,10 @@ export default function Statistic() {
             </div>
           </div>
           : 
-          <p className="font-extralight flex justify-center items-center text-xl text-amber-50">Загрузка...</p>
+          <div className="flex justify-center items-center mt-6">
+              <p className="font-extralight flex justify-center items-center text-xl text-amber-50">Загрузка</p>
+              <Loader color="yellow" size="sm" className="ml-2"/>
+          </div>
           }
         </div>
       </div>
@@ -180,7 +189,10 @@ export default function Statistic() {
             </div>
           </div>
           : 
-          <p className="font-extralight flex justify-center items-center text-xl text-amber-50 h-40">Загрузка...</p>
+          <div className="flex justify-center items-center mt-6">
+              <p className="font-extralight flex justify-center items-center text-xl text-amber-50 h-40">Загрузка</p>
+              <Loader color="yellow" size="sm" className="ml-2"/>
+          </div>
           }
         </div>
 
@@ -211,7 +223,10 @@ export default function Statistic() {
             </div>
           </div>
           : 
-          <p className="font-extralight flex justify-center items-center text-xl text-amber-50 h-40">Загрузка...</p>
+          <div className="flex justify-center items-center mt-6">
+              <p className="font-extralight flex justify-center items-center text-xl text-amber-50 h-40">Загрузка</p>
+              <Loader color="yellow" size="sm" className="ml-2"/>
+          </div>
           }
         </div>
       </div>
