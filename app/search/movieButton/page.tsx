@@ -34,6 +34,8 @@ export default function Search() {
   const [openedPersons, { open: openPersons, close: closePersons }] = useDisclosure(false);
   const [openedGenres, { open: openGenres, close: closeGenres }] = useDisclosure(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoadingMovie, setIsLoadingMovie] = useState<boolean>(false);
+
 
   // Состояния для данных
   const [movies, setMovies] = useState<Film[]>([]);
@@ -85,7 +87,6 @@ export default function Search() {
         const data = await response.json();
         console.log("Данные от API:", data);
 
-        setMovies(data.movies || []);
         setGenres(data.filters.genres || []);
         setPersons(data.filters.persons || []);
         setStudios(data.filters.studios || []);
@@ -97,6 +98,26 @@ export default function Search() {
         setIsLoading(false); // Завершение загрузки
     }
 };
+
+const fetchMovies = async () => {
+  try {
+      setIsLoadingMovie(true); // Начало загрузки
+      const queryParams = new URLSearchParams(filters).toString();
+      console.log("Отправляемый запрос:", `/api/search/movie?${queryParams}`);
+      const response = await fetch(`/api/search/movie?${queryParams}`);
+      if (!response.ok) {
+          throw new Error("Ошибка при загрузке данных");
+      }
+      const data = await response.json();
+      console.log("Данные от API:", data);
+
+      setMovies(data.movies || []);
+  } catch (error) {
+      console.error("Ошибка при загрузке данных:", error);
+  } finally {
+    setIsLoadingMovie(false); // Завершение загрузки
+  }
+}
 
 useEffect(() => {
     console.log("Фильтры изменились, вызываем fetchData");
@@ -204,7 +225,7 @@ useEffect(() => {
                   color="dark.8"
                   size="xl"
                   leftSection={<IconSearch size={30} />}
-                  onClick={fetchData} // Вызываем fetchData при нажатии
+                  onClick={fetchMovies} // Вызываем fetchData при нажатии
               >
                   Поиск
               </Button>
@@ -293,7 +314,7 @@ useEffect(() => {
       </div>
 
       {/* Блок с данными */}
-      {!isLoading ? 
+      {!isLoadingMovie ? 
       <div>
       {currentPageData.map((item) => (
         <div key={item.id} className="ml-15 mr-15 mt-2 bg-zinc-800 pt-4 pb-4 mb-3 rounded-2xl pr-10 pl-10">
@@ -389,7 +410,7 @@ useEffect(() => {
           styles={{ dots: { color: "#52525c" } }}
         />
       </div>
-     </div>
+      </div>
       : 
       <p className="font-extralight flex justify-center items-center text-2xl text-amber-50">Загрузка...</p>
       }

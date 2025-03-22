@@ -25,6 +25,8 @@ export default function Statistic() {
   const [countryCount, setCountryCount] = useState<number>(0);
   const [studios, setStudios] = useState<Studio[]>([]);
   const [persons, setPersons] = useState<Person[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
 
   // Функция для разбиения массива на страницы
   function chunk<T>(array: T[], size: number): T[][] {
@@ -48,6 +50,7 @@ export default function Statistic() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true); // Начало загрузки
         const response = await fetch("/api/statistic");
         if (!response.ok) {
           throw new Error("Не удалось получить данные");
@@ -66,6 +69,8 @@ export default function Statistic() {
         setPersons(data.formattedPersons);
       } catch (error) {
         console.error("Ошибка при выборке данных:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -82,50 +87,67 @@ export default function Statistic() {
             <p className="font-bold text-yellow-300 text-xl">Фильмы</p>
             <IconMovie className="text-yellow-300" size={40} />
           </div>
-          <div className="flex justify-between items-center mb-2">
-            <p className="text-lg">Количество фильмов</p>
-            <p className="text-lg">{movieCount}</p>
+          {!isLoading ?
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <p className="text-lg">Количество фильмов</p>
+              <p className="text-lg">{movieCount}</p>
+            </div>
+            <div className="flex justify-between items-center mb-2">
+              <p className="text-lg">Количество жанров</p>
+              <p className="text-lg">{genreCount}</p>
+            </div>
+            <div className="flex justify-between items-center">
+              <p className="text-lg">Количество языков</p>
+              <p className="text-lg">{languageCount}</p>
+            </div>
           </div>
-          <div className="flex justify-between items-center mb-2">
-            <p className="text-lg">Количество жанров</p>
-            <p className="text-lg">{genreCount}</p>
-          </div>
-          <div className="flex justify-between items-center">
-            <p className="text-lg">Количество языков</p>
-            <p className="text-lg">{languageCount}</p>
-          </div>
+          : 
+          <p className="font-extralight flex justify-center items-center text-xl text-amber-50">Загрузка...</p>
+          }
         </div>
 
         {/* Блок "Люди" */}
         <div className="h-auto w-full bg-zinc-800 rounded-4xl p-4 shadow-xl shadow-zinc-500/20">
           <div className="flex justify-between items-center mb-4">
-            <p className="font-bold text-yellow-300 text-xl">Люди</p>
-            <IconUsersGroup className="text-yellow-300" size={40} />
+              <p className="font-bold text-yellow-300 text-xl">Люди</p>
+              <IconUsersGroup className="text-yellow-300" size={40} />
           </div>
-          <div className="flex justify-between items-center mb-2">
-            <p className="text-lg">Количество людей</p>
-            <p className="text-lg">{personCount}</p>
-          </div>
-          <div className="flex justify-between items-center">
-            <p className="text-lg">Количество национальностей</p>
-            <p className="text-lg">{nationalityCount}</p>
-          </div>
+          {!isLoading ?
+            <div>
+                <div className="flex justify-between items-center mb-2">
+                  <p className="text-lg">Количество людей</p>
+                  <p className="text-lg">{personCount}</p>
+                </div>
+                <div className="flex justify-between items-center">
+                  <p className="text-lg">Количество национальностей</p>
+                  <p className="text-lg">{nationalityCount}</p>
+                </div>
+            </div>
+            : 
+            <p className="font-extralight flex justify-center items-center text-xl text-amber-50">Загрузка...</p>
+            }
         </div>
-
         {/* Блок "Студии" */}
         <div className="h-auto w-full bg-zinc-800 rounded-4xl p-4 shadow-xl shadow-zinc-500/20">
           <div className="flex justify-between items-center mb-4">
             <p className="font-bold text-yellow-300 text-xl">Студии</p>
             <IconBuildings className="text-yellow-300" size={40} />
           </div>
-          <div className="flex justify-between items-center mb-2">
-            <p className="text-lg">Количество студий</p>
-            <p className="text-lg">{studioCount}</p>
+          {!isLoading ?
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <p className="text-lg">Количество студий</p>
+              <p className="text-lg">{studioCount}</p>
+            </div>
+            <div className="flex justify-between items-center">
+              <p className="text-lg">Количество стран</p>
+              <p className="text-lg">{countryCount}</p>
+            </div>
           </div>
-          <div className="flex justify-between items-center">
-            <p className="text-lg">Количество стран</p>
-            <p className="text-lg">{countryCount}</p>
-          </div>
+          : 
+          <p className="font-extralight flex justify-center items-center text-xl text-amber-50">Загрузка...</p>
+          }
         </div>
       </div>
 
@@ -138,22 +160,28 @@ export default function Statistic() {
             <p className="text-amber-50 text-xl ml-4">Студия</p>
             <p className="text-amber-50 text-xl mr-4">Количество фильмов</p>
           </div>
-          {currentStudioPageData?.map((item) => (
-            <div key={item.studioName} className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
-              <p className="text-amber-50 text-base ml-4">{item.studioName}</p>
-              <p className="text-amber-50 text-base mr-4">{item.movieCount}</p>
+          {!isLoading ?
+            <div>
+              {currentStudioPageData?.map((item) => (
+                <div key={item.studioName} className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
+                  <p className="text-amber-50 text-base ml-4">{item.studioName}</p>
+                  <p className="text-amber-50 text-base mr-4">{item.movieCount}</p>
+                </div>
+              ))}
+              <div className="flex justify-center mt-4">
+                <Pagination
+                  total={studiosPages.length}
+                  value={activeStudioPage}
+                  onChange={setActiveStudioPage}
+                  size="lg"
+                  color="dark.4"
+                  styles={{ dots: { color: "#52525c" } }}
+                />
             </div>
-          ))}
-          <div className="flex justify-center mt-4">
-            <Pagination
-              total={studiosPages.length}
-              value={activeStudioPage}
-              onChange={setActiveStudioPage}
-              size="lg"
-              color="dark.4"
-              styles={{ dots: { color: "#52525c" } }}
-            />
           </div>
+          : 
+          <p className="font-extralight flex justify-center items-center text-xl text-amber-50 h-40">Загрузка...</p>
+          }
         </div>
 
         {/* Правый блок с пагинацией (персоны) */}
@@ -163,22 +191,28 @@ export default function Statistic() {
             <p className="text-amber-50 text-xl ml-4">Персона</p>
             <p className="text-amber-50 text-xl mr-4">Количество фильмов</p>
           </div>
-          {currentPersonPageData?.map((item) => (
-            <div key={item.personName} className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
-              <p className="text-amber-50 text-base ml-4">{item.personName}</p>
-              <p className="text-amber-50 text-base mr-4">{item.movieCount}</p>
+          {!isLoading ?
+            <div>
+              {currentPersonPageData?.map((item) => (
+                <div key={item.personName} className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
+                  <p className="text-amber-50 text-base ml-4">{item.personName}</p>
+                  <p className="text-amber-50 text-base mr-4">{item.movieCount}</p>
+                </div>
+              ))}
+              <div className="flex justify-center mt-4">
+                <Pagination
+                  total={personsPages.length}
+                  value={activePersonPage}
+                  onChange={setActivePersonPage}
+                  size="lg"
+                  color="dark.4"
+                  styles={{ dots: { color: "#52525c" } }}
+                />
             </div>
-          ))}
-          <div className="flex justify-center mt-4">
-            <Pagination
-              total={personsPages.length}
-              value={activePersonPage}
-              onChange={setActivePersonPage}
-              size="lg"
-              color="dark.4"
-              styles={{ dots: { color: "#52525c" } }}
-            />
           </div>
+          : 
+          <p className="font-extralight flex justify-center items-center text-xl text-amber-50 h-40">Загрузка...</p>
+          }
         </div>
       </div>
     </div>
