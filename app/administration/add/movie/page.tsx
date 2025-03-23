@@ -146,12 +146,12 @@ export default function AddMovie() {
           }}
         />
         <div className="bg-zinc-800 rounded-2xl justify-self-end">
-          <Button component={Link} href="/administration/addpeople" variant="subtle" color="white" size="lg" leftSection={<IconPlus size={30} />}>
+          <Button component={Link} href="/administration/add/people" variant="subtle" color="white" size="lg" leftSection={<IconPlus size={30} />}>
             Создать персону
           </Button>
         </div>
         <div className="bg-zinc-800 rounded-2xl justify-self-end">
-          <Button component={Link} href="/administration/addstudio" variant="subtle" color="white" size="lg" leftSection={<IconPlus size={30} />}>
+          <Button component={Link} href="/administration/add/studio" variant="subtle" color="white" size="lg" leftSection={<IconPlus size={30} />}>
             Создать студию
           </Button>
         </div>

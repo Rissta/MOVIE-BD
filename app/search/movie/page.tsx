@@ -345,7 +345,7 @@ useEffect(() => {
           <div className="grid grid-cols-8 gap-x-4 text-2xl text-amber-50 h-18">
             <div className="items-center">
               <p className="font-extralight flex justify-center items-center text-base">Название</p>
-              <p className="h-10 flex justify-center items-center rounded-2xl text-lg mt-3 text-center">{item.title}</p>
+              <p className="h-9 flex justify-center items-center rounded-2xl text-base mt-3 text-center">{item.title}</p>
             </div>
             <div className="items-center">
               <p className="font-extralight flex justify-center items-center text-base">Рейтинг</p>
