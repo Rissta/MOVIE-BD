@@ -1,7 +1,7 @@
 "use client"; // Обязательно для использования React-хуков в Next.js 13+
 import React, { useState } from "react";
 import { Input, MultiSelect, Button, Select, Textarea } from "@mantine/core";
-import { IconCheck, IconCircleX, IconPlus } from "@tabler/icons-react";
+import { IconCheck, IconCircleX, IconPlus, IconSelect } from "@tabler/icons-react";
 import Link from "next/link";
 
 // Интерфейс для данных о наградах
@@ -19,13 +19,19 @@ interface Rating {
 }
 
 export default function AddMovie() {
-  // Состояние для хранения выбранных значений
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
-
-  // Состояние для отслеживания текста поиска
   const [searchValue, setSearchValue] = useState<string>("");
+  const [sweethcCountry, setSweethcCountry] = useState<boolean>(false);
+  const [sweethcLanguage, setSweethcLanguage] = useState<boolean>(false);
 
-  // Обработчик изменения выбранных значений
+    const toggleCountryField = () => {
+      setSweethcCountry((sweethcCountry) => !sweethcCountry);
+    };
+  
+    const toggleLanguageField = () => {
+      setSweethcLanguage((sweethcLanguage) => !sweethcLanguage);
+    };
+
   const handleChange = (values: string[]) => {
     setSelectedValues(values);
   };
@@ -80,30 +86,92 @@ export default function AddMovie() {
             }}
           />
         </Input.Wrapper>
-        <Input.Wrapper label="Страна" className="text-amber-50" size="lg">
-          <Input
-            size="lg"
-            radius="md"
-            placeholder="Введите страну"
-            styles={{
-              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#fff" },
-            }}
-          />
-        </Input.Wrapper>
-        <Input.Wrapper label="Язык" className="text-amber-50" size="lg">
-          <Input
-            size="lg"
-            radius="md"
-            placeholder="Введите язык"
-            styles={{
-              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#fff" },
-            }}
-          />
-        </Input.Wrapper>
+        {!sweethcCountry ?(
+          <div>
+            <Select
+              size="lg"
+              radius="md"
+              allowDeselect
+              label="Страна"
+              className="text-amber-50"
+              placeholder="Выберите страну"
+              data={["React", "Angular", "Vue", "Svelte"]}
+              styles={{
+                input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
+                dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
+              }}
+            />
+            <div className="bg-zinc-800 rounded-2xl justify-self-end mt-6">
+              <Button onClick={toggleCountryField} variant="subtle" color="white" size="lg" leftSection={<IconPlus size={30} />}>
+              Добавить страну
+              </Button>    
+            </div>
+          </div>
+        ) : (
+          <div>
+            <Input.Wrapper label="Страна" className="text-amber-50" size="lg">
+              <Input
+                size="lg"
+                radius="md"
+                placeholder="Введите страну"
+                styles={{
+                  input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#fff" },
+                }}
+              />
+            </Input.Wrapper>
+            <div className="bg-zinc-800 rounded-2xl justify-self-end mt-6">
+              <Button onClick={toggleCountryField} variant="subtle" color="white" size="lg" leftSection={<IconSelect size={30} />}>
+              Выбрать страну
+              </Button>    
+            </div>
+          </div>
+        )}
+
+
+        {!sweethcLanguage ?(
+          <div>
+            <Select
+              size="lg"
+              radius="md"
+              allowDeselect
+              label="Язык"
+              className="text-amber-50"
+              placeholder="Выберите язык"
+              data={["React", "Angular", "Vue", "Svelte"]}
+              styles={{
+                input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
+                dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
+              }}
+            />
+            <div className="bg-zinc-800 rounded-2xl justify-self-end mt-6">
+              <Button onClick={toggleLanguageField} variant="subtle" color="white" size="lg" leftSection={<IconPlus size={30} />}>
+              Добавить язык
+              </Button>    
+            </div>
+          </div>
+        ) : (
+          <div>
+            <Input.Wrapper label="Язык" className="text-amber-50" size="lg">
+              <Input
+                size="lg"
+                radius="md"
+                placeholder="Введите язык"
+                styles={{
+                  input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#fff" },
+                }}
+              />
+            </Input.Wrapper>
+            <div className="bg-zinc-800 rounded-2xl justify-self-end mt-6">
+              <Button onClick={toggleLanguageField} variant="subtle" color="white" size="lg" leftSection={<IconSelect size={30} />}>
+              Выбрать язык
+              </Button>    
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Поле описания */}
-      <div className="flex justify-center mt-6">
+      <div className="flex justify-center">
         <Textarea
           className="w-full text-amber-50"
           size="lg"
@@ -117,6 +185,7 @@ export default function AddMovie() {
       {/* Блок с выбором персоны и студии */}
       <div className="grid grid-cols-2 gap-x-10 gap-y-6 mt-6">
         <MultiSelect
+          className="text-amber-50"
           size="lg"
           radius="md"
           label="Персона"
@@ -134,6 +203,7 @@ export default function AddMovie() {
           }}
         />
         <Select
+          className="text-amber-50"
           size="lg"
           radius="md"
           allowDeselect
@@ -145,13 +215,13 @@ export default function AddMovie() {
             dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
           }}
         />
-        <div className="bg-zinc-800 rounded-2xl justify-self-end">
-          <Button component={Link} href="/administration/add/people" variant="subtle" color="white" size="lg" leftSection={<IconPlus size={30} />}>
+        <div className="bg-yellow-300 rounded-2xl justify-self-end">
+          <Button component={Link} href="/administration/add/people" variant="subtle" color="dark.8" size="lg" leftSection={<IconPlus size={30} />}>
             Создать персону
           </Button>
         </div>
-        <div className="bg-zinc-800 rounded-2xl justify-self-end">
-          <Button component={Link} href="/administration/add/studio" variant="subtle" color="white" size="lg" leftSection={<IconPlus size={30} />}>
+        <div className="bg-yellow-300 rounded-2xl justify-self-end">
+          <Button component={Link} href="/administration/add/studio" variant="subtle" color="dark.8" size="lg" leftSection={<IconPlus size={30} />}>
             Создать студию
           </Button>
         </div>
@@ -229,11 +299,7 @@ export default function AddMovie() {
 
       {/* Кнопки действий */}
       <div className="flex justify-center items-center space-x-10 mt-10">
-        <div className="bg-zinc-800 rounded-2xl">
-          <Button variant="subtle" color="white" size="xl" leftSection={<IconCircleX size={30} />}>
-            Сбросить
-          </Button>
-        </div>
+
         <div className="bg-yellow-300 rounded-2xl">
           <Button variant="subtle" color="dark.8" size="xl" leftSection={<IconCheck size={30} />}>
             Сохранить

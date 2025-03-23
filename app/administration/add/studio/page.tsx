@@ -1,7 +1,7 @@
 "use client"; // Обязательно для использования React-хуков в Next.js 13+
 import React, { useState } from "react";
-import { Input, MultiSelect, Button } from "@mantine/core";
-import { IconCheck, IconCircleX } from "@tabler/icons-react";
+import { Input, MultiSelect, Button, Select } from "@mantine/core";
+import { IconCheck, IconCircleX, IconPlus, IconSelect } from "@tabler/icons-react";
 
 // Интерфейс для данных о студии
 interface Studio {
@@ -12,11 +12,13 @@ interface Studio {
 }
 
 export default function AddStudio() {
-  // Состояние для хранения выбранных значений
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
-
-  // Состояние для отслеживания текста поиска
   const [searchValue, setSearchValue] = useState<string>("");
+  const [sweethcCountry, setSweethcCountry] = useState<boolean>(false);
+
+  const toggleCountryField = () => {
+    setSweethcCountry((sweethcCountry) => !sweethcCountry);
+  };
 
   // Обработчик изменения выбранных значений
   const handleChange = (values: string[]) => {
@@ -43,16 +45,50 @@ export default function AddStudio() {
             }}
           />
         </Input.Wrapper>
-        <Input.Wrapper label="Страна" className="text-amber-50" size="lg">
-          <Input
-            size="lg"
-            radius="md"
-            placeholder="Введите страну"
-            styles={{
-              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#fff" },
-            }}
-          />
-        </Input.Wrapper>
+
+
+        {!sweethcCountry ?(
+          <div>
+            <Select
+              size="lg"
+              radius="md"
+              allowDeselect
+              label="Страна"
+              className="text-amber-50"
+              placeholder="Выберите страну"
+              data={["React", "Angular", "Vue", "Svelte"]}
+              styles={{
+                input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
+                dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
+              }}
+            />
+            <div className="bg-zinc-800 rounded-2xl justify-self-end mt-6">
+              <Button onClick={toggleCountryField} variant="subtle" color="white" size="lg" leftSection={<IconPlus size={30} />}>
+              Добавить страну
+              </Button>    
+            </div>
+          </div>
+        ) : (
+          <div>
+            <Input.Wrapper label="Страна" className="text-amber-50" size="lg">
+              <Input
+                size="lg"
+                radius="md"
+                placeholder="Введите страну"
+                styles={{
+                  input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#fff" },
+                }}
+              />
+            </Input.Wrapper>
+            <div className="bg-zinc-800 rounded-2xl justify-self-end mt-6">
+              <Button onClick={toggleCountryField} variant="subtle" color="white" size="lg" leftSection={<IconSelect size={30} />}>
+              Выбрать страну
+              </Button>    
+            </div>
+          </div>
+        )}
+
+
         <Input.Wrapper label="Дата создания" className="text-amber-50" size="lg">
           <Input
             size="lg"
@@ -69,7 +105,7 @@ export default function AddStudio() {
       <MultiSelect
         size="lg"
         radius="md"
-        className="w-full text-amber-50 mt-6"
+        className="w-full text-amber-50"
         label="Фильм"
         placeholder={!selectedValues.length && !searchValue ? "Выбрать фильм" : ""}
         data={["React", "Angular", "Vue", "Svelte"]}
@@ -91,11 +127,7 @@ export default function AddStudio() {
 
       {/* Кнопки действий */}
       <div className="flex justify-center items-center space-x-10 mt-10">
-        <div className="bg-zinc-800 rounded-2xl">
-          <Button variant="subtle" color="white" size="xl" leftSection={<IconCircleX size={30} />}>
-            Сбросить
-          </Button>
-        </div>
+
         <div className="bg-yellow-300 rounded-2xl">
           <Button variant="subtle" color="dark.8" size="xl" leftSection={<IconCheck size={30} />}>
             Сохранить

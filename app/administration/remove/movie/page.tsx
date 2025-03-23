@@ -264,8 +264,9 @@ useEffect(() => {
       </div>
 
       <div className="flex justify-center items-center mt-6 mb-10">
-        <div className="grid grid-cols-3 gap-x-10 text-2xl">
+        <div className="grid grid-cols-3 gap-x-10 gap-y-5 text-2xl">
           <Select
+            className="text-amber-50"
             size="lg"
             radius="md"
             allowDeselect
@@ -280,6 +281,7 @@ useEffect(() => {
             }}
           />
           <Select
+            className="text-amber-50"
             size="lg"
             radius="md"
             allowDeselect
@@ -294,6 +296,7 @@ useEffect(() => {
             }}
           />
           <Select
+            className="text-amber-50"
             size="lg"
             radius="md"
             label="Студия"
@@ -307,6 +310,7 @@ useEffect(() => {
             }}
           />
           <Select
+            className="text-amber-50"
             size="lg"
             radius="md"
             allowDeselect
@@ -321,6 +325,7 @@ useEffect(() => {
             }}
           />
           <Select
+            className="text-amber-50"
             size="lg"
             radius="md"
             allowDeselect
@@ -335,6 +340,7 @@ useEffect(() => {
             }}
           />
           <Input.Wrapper
+            className="text-amber-50"
             label="Рейтинг"
             size="md"
             error={ratingError} // Отображаем сообщение об ошибке

@@ -179,6 +179,7 @@ export default function Search() {
       <div className="flex justify-center items-center mt-6 mb-10">
         <div className="grid grid-cols-3 gap-x-10 gap-y-6 text-2xl">
           <Select
+            className="text-amber-50"
             size="lg"
             radius="md"
             allowDeselect
@@ -193,6 +194,7 @@ export default function Search() {
             }}
           />
           <Select
+            className="text-amber-50"
             size="lg"
             radius="md"
             allowDeselect
@@ -207,6 +209,7 @@ export default function Search() {
             }}
           />
           <Select
+            className="text-amber-50"
             size="lg"
             radius="md"
             label="Национальность"
