@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Button, Input, Loader, Modal, Pagination, Select, Text } from "@mantine/core";
+import { useCallback } from 'react';
 import {
   IconLicense,
   IconMessage,
@@ -128,18 +129,13 @@ const handleRatingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     }
   };
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
         setIsLoading(true); // Начало загрузки
         const queryParams = new URLSearchParams(filters).toString();
-        console.log("Отправляемый запрос:", `/api/search/movie?${queryParams}`);
         const response = await fetch(`/api/search/movie?${queryParams}`);
-        if (!response.ok) {
-            throw new Error("Ошибка при загрузке данных");
-        }
+        if (!response.ok) throw new Error("Ошибка при загрузке данных");
         const data = await response.json();
-        console.log("Данные от API:", data);
-
         setMovies(data.movies || []);
         setGenres(data.filters.genres || []);
         setPersons(data.filters.persons || []);
@@ -151,7 +147,7 @@ const handleRatingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     } finally {
         setIsLoading(false); // Завершение загрузки
     }
-};
+}, [filters]); // Указываем зависимость от filters
 
 useEffect(() => {
     console.log("Фильтры изменились, вызываем fetchData");
