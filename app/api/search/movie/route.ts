@@ -5,129 +5,124 @@ const prisma = new PrismaClient();
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
     try {
-        const searchParams = request.nextUrl.searchParams;
+        // Используем $transaction для выполнения всех запросов в одной транзакции
+        const [
+            movieCount,
+            genres,
+            languages,
+            personCount,
+            nationalities,
+            studioCount,
+            countries,
+            studiosWithMovieCount,
+            personsWithMovieCount,
+        ] = await prisma.$transaction([
+            // 1. Общее количество фильмов
+            prisma.movie.count(),
 
-        console.log("Параметры запроса:", {
-            title: searchParams.get('title'),
-            genre: searchParams.get('genre'),
-            person: searchParams.get('person'),
-            studio: searchParams.get('studio'),
-            country: searchParams.get('country'),
-            year: searchParams.get('year'),
-            minRating: searchParams.get('minRating'),
-        });
-
-        const whereConditions: any = {};
-
-        if (searchParams.get('title')) {
-            whereConditions.title = { contains: searchParams.get('title') };
-        }
-
-        if (searchParams.get('genre')) {
-            whereConditions.genre = { contains: searchParams.get('genre') };
-        }
-
-        if (searchParams.get('person')) {
-            whereConditions.persons = {
-                some: { person: { name: { contains: searchParams.get('person') } } },
-            };
-        }
-
-        if (searchParams.get('studio')) {
-            whereConditions.studio = { studioName: { contains: searchParams.get('studio') } };
-        }
-
-        if (searchParams.get('country')) {
-            whereConditions.country = { contains: searchParams.get('country') };
-        }
-
-        if (searchParams.get('year')) {
-            const parsedYear = parseInt(searchParams.get('year') || '', 10);
-            if (!isNaN(parsedYear)) {
-                whereConditions.releaseYear = { equals: parsedYear };
-            }
-        }
-
-        if (searchParams.get('minRating')) {
-            const parsedRating = parseFloat(searchParams.get('minRating') || '');
-            if (!isNaN(parsedRating)) {
-                whereConditions.rating = {
-                    ratingValue: { gte: parsedRating },
-                };
-            }
-        }
-
-        const filteredMovies = await prisma.movie.findMany({
-            where: whereConditions,
-            include: {
-                studio: true,
-                persons: { include: { person: true } },
-                rating: true,
-            },
-        });
-
-        if (filteredMovies.length === 0) {
-            return NextResponse.json({
-                movies: [],
-                filters: {
-                    genres: [],
-                    persons: [],
-                    studios: [],
-                    countries: [],
-                    years: [],
+            // 2. Все жанры из таблицы фильмов
+            prisma.movie.findMany({
+                select: {
+                    genre: true,
                 },
-            });
-        }
+            }),
 
-        const formattedMovies = filteredMovies.map(movie => ({
-            id: movie.id,
-            title: movie.title || "Нет данных",
-            rating: movie.rating?.ratingValue ? movie.rating.ratingValue.toFixed(1) : "Нет данных",
-            duration: `${movie.duration || 0} минут`,
-            country: movie.country || "Нет данных",
-            studio: movie.studio?.studioName || "Нет данных",
-            description: movie.description || "Нет описания",
-            releaseYear: movie.releaseYear?.toString() || "Нет года выхода",
-            genres: movie.genre ? movie.genre.split(',').map(g => g.trim()) : [],
-            persons: movie.persons && movie.persons.length > 0
-                ? movie.persons.map(p => ({
-                      name: p.person.name,
-                      role: p.person.role || "Неизвестная роль", // Добавляем роль персоны
-                  }))
-                : [{ name: "Нет данных", role: "Нет данных" }],
-        }));
+            // 3. Все уникальные языки из таблицы фильмов
+            prisma.movie.findMany({
+                select: {
+                    language: true,
+                },
+                distinct: ['language'],
+            }),
 
-        const uniqueGenres = Array.from(
-            new Set(filteredMovies.flatMap(movie => movie.genre?.split(',') || []).map(g => g.trim()))
-        ).filter(Boolean);
+            // 4. Общее количество людей
+            prisma.person.count(),
 
-        const uniquePersons = Array.from(
-            new Set(filteredMovies.flatMap(movie =>
-                movie.persons.map(p => p.person.name)
-            ))
-        ).filter(Boolean);
+            // 5. Уникальные национальности людей
+            prisma.person.findMany({
+                select: {
+                    nationality: true,
+                },
+                distinct: ['nationality'],
+            }),
 
-        const uniqueStudios = Array.from(
-            new Set(filteredMovies.map(movie => movie.studio?.studioName))
-        ).filter(Boolean);
+            // 6. Общее количество студий
+            prisma.studio.count(),
 
-        const uniqueCountries = Array.from(
-            new Set(filteredMovies.map(movie => movie.country))
-        ).filter(Boolean);
+            // 7. Уникальные страны студий
+            prisma.studio.findMany({
+                select: {
+                    country: true,
+                },
+                distinct: ['country'],
+            }),
 
-        const uniqueYears = Array.from(
-            new Set(filteredMovies.map(movie => movie.releaseYear?.toString()))
-        ).filter(Boolean);
+            // 8. Количество фильмов у каждой студии
+            prisma.studio.findMany({
+                select: {
+                    studioName: true,
+                    _count: {
+                        select: {
+                            movies: true,
+                        },
+                    },
+                },
+            }),
+
+            // 9. Количество фильмов у каждого человека
+            prisma.person.findMany({
+                select: {
+                    name: true,
+                    _count: {
+                        select: {
+                            movies: true,
+                        },
+                    },
+                },
+            }),
+        ]);
+
+        // Обработка жанров
+        const allGenres: string[] = genres
+            .map(genre => genre.genre?.split(',').map(g => g.trim()) || [])
+            .flat();
+        const uniqueGenres: string[] = [...new Set(allGenres)];
+
+        const genreCount: number = uniqueGenres.filter(Boolean).length;
+
+        // Обработка языков
+        const languageCount: number = languages.filter(Boolean).length;
+
+        // Обработка национальностей
+        const nationalityCount: number = nationalities.filter(Boolean).length;
+
+        // Обработка стран
+        const countryCount: number = countries.filter(Boolean).length;
+
+        // Форматирование данных о студиях
+        const formattedStudios: { studioName: string; movieCount: number }[] =
+            studiosWithMovieCount.map(studio => ({
+                studioName: studio.studioName,
+                movieCount: studio._count.movies,
+            }));
+
+        // Форматирование данных о людях
+        const formattedPersons: { personName: string; movieCount: number }[] =
+            personsWithMovieCount.map(person => ({
+                personName: person.name,
+                movieCount: person._count.movies,
+            }));
 
         return NextResponse.json({
-            movies: formattedMovies,
-            filters: {
-                genres: uniqueGenres,
-                persons: uniquePersons,
-                studios: uniqueStudios,
-                countries: uniqueCountries,
-                years: uniqueYears,
-            },
+            movieCount,
+            genreCount,
+            languageCount,
+            personCount,
+            nationalityCount,
+            studioCount,
+            countryCount,
+            formattedStudios,
+            formattedPersons,
         });
     } catch (error: unknown) {
         console.error('Ошибка при выборке данных:', error);

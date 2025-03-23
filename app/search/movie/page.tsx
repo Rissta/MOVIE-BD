@@ -42,6 +42,8 @@ export default function Search() {
   const [studios, setStudios] = useState<string[]>([]);
   const [countries, setCountries] = useState<string[]>([]);
   const [years, setYears] = useState<string[]>([]);
+  // Состояние для ошибки рейтинга
+  const [ratingError, setRatingError] = useState<string | null>(null);
 
   // Состояние для фильтров
   const [filters, setFilters] = useState({
@@ -53,6 +55,36 @@ export default function Search() {
     year: "",
     minRating: "",
   });
+
+// Функция для проверки корректности рейтинга
+const validateRating = (value: string): boolean => {
+  const ratingRegex = /^\d+(\.\d*)?$/; // Разрешаем частичный ввод после точки
+  // Проверяем формат числа
+  if (!ratingRegex.test(value)) {
+    return false;
+  }
+
+  // Преобразуем значение в число
+  const numericValue = parseFloat(value);
+
+  // Проверяем диапазон: больше 0 и меньше 10
+  return numericValue > 0 && numericValue < 10;
+};
+
+// Обработчик изменения значения рейтинга
+const handleRatingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const value = e.target.value;
+
+  // Проверяем корректность значения
+  if (value === "" || validateRating(value)) {
+    setRatingError(null); // Очищаем ошибку, если значение корректно
+  } else {
+    setRatingError("Некорректный формат рейтинга (например, '7.6')"); // Устанавливаем сообщение об ошибке
+  }
+
+  // Обновляем фильтры
+  handleInputChange("minRating", value);
+};
 
   // Состояние для пагинации
   const [activePage, setActivePage] = useState<number>(1);
@@ -221,6 +253,7 @@ useEffect(() => {
             label="Жанр"
             placeholder="Выберите жанр"
             data={genres}
+            disabled={isLoading}
             onChange={(value) => handleInputChange("genre", value || "")}
             styles={{
               input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
@@ -234,6 +267,7 @@ useEffect(() => {
             label="Персона"
             placeholder="Выберите персону"
             data={persons}
+            disabled={isLoading}
             onChange={(value) => handleInputChange("person", value || "")}
             styles={{
               input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
@@ -246,6 +280,7 @@ useEffect(() => {
             label="Студия"
             placeholder="Выберите студию"
             data={studios}
+            disabled={isLoading}
             onChange={(value) => handleInputChange("studio", value || "")}
             styles={{
               input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
@@ -259,6 +294,7 @@ useEffect(() => {
             label="Страна"
             placeholder="Выберите страну"
             data={countries}
+            disabled={isLoading}
             onChange={(value) => handleInputChange("country", value || "")}
             styles={{
               input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
@@ -272,20 +308,29 @@ useEffect(() => {
             label="Год"
             placeholder="Выберите год"
             data={years}
+            disabled={isLoading}
             onChange={(value) => handleInputChange("year", value || "")}
             styles={{
               input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
               dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
             }}
           />
-          <Input.Wrapper label="Рейтинг" size="md">
+          <Input.Wrapper
+            label="Рейтинг"
+            size="md"
+            error={ratingError} // Отображаем сообщение об ошибке
+          >
             <Input
               size="lg"
               radius="md"
               placeholder="От"
-              onChange={(e) => handleInputChange("minRating", e.target.value)}
+              onChange={handleRatingChange} // Используем новый обработчик
               styles={{
-                input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
+                input: {
+                  backgroundColor: "#27272a",
+                  borderColor: ratingError ? "red" : "#27272a", // Меняем цвет рамки при ошибке
+                  color: "#71717b",
+                },
               }}
             />
           </Input.Wrapper>
@@ -300,7 +345,7 @@ useEffect(() => {
           <div className="grid grid-cols-8 gap-x-4 text-2xl text-amber-50 h-18">
             <div className="items-center">
               <p className="font-extralight flex justify-center items-center text-base">Название</p>
-              <p className="h-10 flex justify-center items-center rounded-2xl text-xl mt-3 text-balance">{item.title}</p>
+              <p className="h-10 flex justify-center items-center rounded-2xl text-lg mt-3 text-center">{item.title}</p>
             </div>
             <div className="items-center">
               <p className="font-extralight flex justify-center items-center text-base">Рейтинг</p>

@@ -125,6 +125,7 @@ export default function StudioDirectory() {
             label="Фильм"
             placeholder="Выберите фильм"
             data={movies}
+            disabled={isLoading}
             onChange={(value) => handleInputChange("movie", value || "")}
             styles={{
               input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
@@ -138,6 +139,7 @@ export default function StudioDirectory() {
             label="Страна"
             placeholder="Выберите страну"
             data={countries}
+            disabled={isLoading}
             onChange={(value) => handleInputChange("country", value || "")}
             styles={{
               input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },

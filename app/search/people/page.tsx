@@ -162,6 +162,7 @@ export default function Search() {
             label="Фильм"
             placeholder="Выберите фильм"
             data={movies}
+            disabled={isLoading}
             onChange={(value) => handleInputChange("movie", value || "")}
             styles={{
               input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
@@ -175,6 +176,7 @@ export default function Search() {
             label="Роль"
             placeholder="Выберите роль"
             data={roles}
+            disabled={isLoading}
             onChange={(value) => handleInputChange("role", value || "")}
             styles={{
               input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
@@ -187,6 +189,7 @@ export default function Search() {
             label="Национальность"
             placeholder="Выберите национальность"
             data={nationalities}
+            disabled={isLoading}
             onChange={(value) => handleInputChange("nationality", value || "")}
             styles={{
               input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
