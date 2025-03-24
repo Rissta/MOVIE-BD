@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Input, Loader, Modal, Pagination, Select, Text } from "@mantine/core";
 import {
+  IconFilterOff,
   IconLicense,
   IconMessage,
   IconSearch,
@@ -45,15 +46,37 @@ export default function Search() {
   const [ratingError, setRatingError] = useState<string | null>(null);
 
   // Состояние для фильтров
-  const [filters, setFilters] = useState({
-    title: "",
-    genre: "",
-    person: "",
-    studio: "",
-    country: "",
-    year: "",
-    minRating: "",
+  const [filters, setFilters] = useState<{
+    title: string | null;
+    genre: string | null;
+    person: string | null;
+    studio: string | null;
+    country: string | null;
+    year: string | null;
+    minRating: string | null;
+  }>({
+    title: null,
+    genre: null,
+    person: null,
+    studio: null,
+    country: null,
+    year: null,
+    minRating: null,
   });
+
+  // Функция для очистки фильтров
+  const clearFilters = () => {
+    setFilters({
+      title: null,
+      genre: null,
+      person: null,
+      studio: null,
+      country: null,
+      year: null,
+      minRating: null,
+    });
+    setRatingError(null); // Очищаем ошибку рейтинга
+  };
 
   // Функция для проверки корректности рейтинга
   const validateRating = (value: string): boolean => {
@@ -97,7 +120,15 @@ export default function Search() {
     try {
       setActivePage(1);
       setIsLoading(true); // Начало загрузки
-      const queryParams = new URLSearchParams(filters).toString();
+  
+      // Преобразуем null в пустые строки для запроса
+      const queryParams = new URLSearchParams(
+        Object.entries(filters).reduce((acc, [key, value]) => {
+          acc[key] = value ?? ""; // Преобразуем null в пустую строку
+          return acc;
+        }, {} as Record<string, string>)
+      ).toString();
+  
       console.log("Отправляемый запрос:", `/api/search/movie?${queryParams}`);
       const response = await fetch(`/api/search/movie?${queryParams}`);
       if (!response.ok) {
@@ -105,6 +136,7 @@ export default function Search() {
       }
       const data = await response.json();
       console.log("Данные от API:", data);
+  
       setMovies(data.movies || []);
       setGenres(data.filters.genres || []);
       setPersons(data.filters.persons || []);
@@ -128,10 +160,10 @@ export default function Search() {
   }, [filters]);
 
   // Обработчик изменений в полях ввода
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: string, value: string | null) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
-      [field]: value,
+      [field]: value === "" ? null : value, // Преобразуем пустую строку в null
     }));
   };
 
@@ -226,6 +258,17 @@ export default function Search() {
               Поиск
             </Button>
           </div>
+          <div className="bg-zinc-800 rounded-2xl ml-6">
+            <Button
+              variant="subtle"
+              color="white"
+              size="xl"
+              onClick={clearFilters}
+              leftSection={<IconFilterOff size={30} />}
+            >
+              Очистить фильтр
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -239,6 +282,7 @@ export default function Search() {
             label="Жанр"
             placeholder="Выберите жанр"
             data={genres}
+            value={filters.genre}
             disabled={isLoading}
             onChange={(value) => handleInputChange("genre", value || "")}
             styles={{
@@ -254,6 +298,7 @@ export default function Search() {
             label="Персона"
             placeholder="Выберите персону"
             data={persons}
+            value={filters.person}
             disabled={isLoading}
             onChange={(value) => handleInputChange("person", value || "")}
             styles={{
@@ -268,6 +313,7 @@ export default function Search() {
             label="Студия"
             placeholder="Выберите студию"
             data={studios}
+            value={filters.studio}
             disabled={isLoading}
             onChange={(value) => handleInputChange("studio", value || "")}
             styles={{
@@ -283,6 +329,7 @@ export default function Search() {
             label="Страна"
             placeholder="Выберите страну"
             data={countries}
+            value={filters.country}
             disabled={isLoading}
             onChange={(value) => handleInputChange("country", value || "")}
             styles={{
@@ -298,6 +345,7 @@ export default function Search() {
             label="Год"
             placeholder="Выберите год"
             data={years}
+            value={filters.year}
             disabled={isLoading}
             onChange={(value) => handleInputChange("year", value || "")}
             styles={{
@@ -316,6 +364,7 @@ export default function Search() {
               radius="md"
               placeholder="От"
               onChange={handleRatingChange}
+              value={filters.minRating || ""}
               styles={{
                 input: {
                   backgroundColor: "#27272a",

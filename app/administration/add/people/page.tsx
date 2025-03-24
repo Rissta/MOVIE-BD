@@ -342,7 +342,7 @@ export default function AddPeople() {
         size="lg"
         radius="md"
         className="w-full text-amber-50"
-        label="Фильм"
+        label="Фильм (необязательно)"
         placeholder={ isLoading ? "Загрузка..." : (!selectedValues.length && !searchValue ? "Выбрать фильм" : "")}
         data={movies}
         value={selectedValues}

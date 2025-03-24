@@ -23,17 +23,41 @@ export default function StudioDirectory() {
   const [studios, setStudios] = useState<Studio[]>([]);
   const [countries, setCountries] = useState<string[]>([]);
   const [movies, setMovies] = useState<string[]>([]);
-  const [filters, setFilters] = useState({ studioName: "", country: "", movie: "" });
   const [activePage, setActivePage] = useState<number>(1);
   const [selectedStudio, setSelectedStudio] = useState<Studio | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false); // Состояние загрузки
 
+  const [filters, setFilters] = useState<{
+    studioName: string | null;
+    country: string | null;
+    movie: string | null;
+  }>({
+    studioName: null,
+    country: "",
+    movie: "",
+  });
 
+  const clearFilters = () => {
+    setFilters({
+      studioName: null,
+      country: null,
+      movie: null,
+    });
+  };
+  
   const fetchData = async () => {
     try {
       setActivePage(1);
       setIsLoading(true); // Начало загрузки
-      const queryParams = new URLSearchParams(filters).toString();
+
+      // Преобразуем null в пустые строки для запроса
+      const queryParams = new URLSearchParams(
+        Object.entries(filters).reduce((acc, [key, value]) => {
+          acc[key] = value ?? ""; // Преобразуем null в пустую строку
+          return acc;
+        }, {} as Record<string, string>)
+      ).toString();
+
       const response = await fetch(`/api/search/studio?${queryParams}`);
       if (!response.ok) throw new Error("Ошибка при загрузке данных");
       const data = await response.json();
@@ -51,10 +75,14 @@ export default function StudioDirectory() {
     fetchData();
   }, [filters]);
 
-  const handleInputChange = (field: string, value: string) => {
-    setFilters((prev) => ({ ...prev, [field]: value }));
+  // Обработчик изменений в полях ввода
+  const handleInputChange = (field: string, value: string | null) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [field]: value === "" ? null : value, // Преобразуем пустую строку в null
+    }));
   };
-
+  
   function chunk<T>(array: T[], size: number): T[][] {
     if (!array.length) return [];
     const head = array.slice(0, size);
@@ -113,6 +141,17 @@ export default function StudioDirectory() {
               Поиск
             </Button>
           </div>
+          <div className="bg-zinc-800 rounded-2xl ml-6">
+            <Button
+              variant="subtle"
+              color="white"
+              size="xl"
+              leftSection={<IconFilterOff size={30} />}
+              onClick={clearFilters} // Добавляем обработчик для очистки фильтров
+            >
+              Очистить фильтр
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -127,6 +166,7 @@ export default function StudioDirectory() {
             label="Фильм"
             placeholder="Выберите фильм"
             data={movies}
+            value={filters.movie}
             disabled={isLoading}
             onChange={(value) => handleInputChange("movie", value || "")}
             styles={{
@@ -142,6 +182,7 @@ export default function StudioDirectory() {
             label="Страна"
             placeholder="Выберите страну"
             data={countries}
+            value={filters.country}
             disabled={isLoading}
             onChange={(value) => handleInputChange("country", value || "")}
             styles={{

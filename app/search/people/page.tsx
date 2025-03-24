@@ -30,13 +30,26 @@ export default function Search() {
   const [roles, setRoles] = useState<string[]>([]);
   const [movies, setMovies] = useState<string[]>([]);
 
-  // Состояние для фильтров
-  const [filters, setFilters] = useState({
-    name: "",
-    nationality: "",
-    role: "",
-    movie: "",
+  const [filters, setFilters] = useState<{
+    name: string | null;
+    nationality: string | null;
+    role: string | null;
+    movie: string | null;
+  }>({
+    name: null,
+    nationality: null,
+    role: null,
+    movie: null,
   });
+
+  const clearFilters = () => {
+    setFilters({
+      name: null,
+      nationality: null,
+      role: null,
+      movie: null,
+    });
+  };
 
   // Состояние для пагинации
   const [activePage, setActivePage] = useState<number>(1);
@@ -63,7 +76,15 @@ export default function Search() {
     try {
       setActivePage(1);
       setIsLoading(true); // Начало загрузки
-      const queryParams = new URLSearchParams(filters).toString();
+  
+      // Преобразуем null в пустые строки для запроса
+      const queryParams = new URLSearchParams(
+        Object.entries(filters).reduce((acc, [key, value]) => {
+          acc[key] = value ?? ""; // Преобразуем null в пустую строку
+          return acc;
+        }, {} as Record<string, string>)
+      ).toString();
+  
       console.log("Отправляемый запрос:", `/api/search/people?${queryParams}`);
       const response = await fetch(`/api/search/people?${queryParams}`);
       if (!response.ok) {
@@ -71,7 +92,6 @@ export default function Search() {
       }
       const data = await response.json();
       console.log("Данные от API:", data);
-
       setPersons(data.persons || []);
       setNationalities(data.filters.nationalities || []);
       setRoles(data.filters.roles || []);
@@ -88,11 +108,10 @@ export default function Search() {
     fetchData();
   }, [filters]);
 
-  // Обработчик изменений в полях ввода
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: string, value: string | null) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
-      [field]: value,
+      [field]: value === "" ? null : value, // Преобразуем пустую строку в null
     }));
   };
 
@@ -150,6 +169,17 @@ export default function Search() {
             Поиск
             </Button>
           </div>
+          <div className="bg-zinc-800 rounded-2xl ml-6">
+            <Button
+              variant="subtle"
+              color="white"
+              size="xl"
+              onClick={clearFilters}
+              leftSection={<IconFilterOff size={30} />}
+            >
+              Очистить фильтр
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -164,6 +194,7 @@ export default function Search() {
             label="Фильм"
             placeholder="Выберите фильм"
             data={movies}
+            value={filters.movie}
             disabled={isLoading}
             onChange={(value) => handleInputChange("movie", value || "")}
             styles={{
@@ -179,6 +210,7 @@ export default function Search() {
             label="Роль"
             placeholder="Выберите роль"
             data={roles}
+            value={filters.role}
             disabled={isLoading}
             onChange={(value) => handleInputChange("role", value || "")}
             styles={{
@@ -193,6 +225,7 @@ export default function Search() {
             label="Национальность"
             placeholder="Выберите национальность"
             data={nationalities}
+            value={filters.nationality}
             disabled={isLoading}
             onChange={(value) => handleInputChange("nationality", value || "")}
             styles={{
