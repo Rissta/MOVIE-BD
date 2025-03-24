@@ -72,6 +72,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                 movieCount: studio._count.movies,
             }));
 
+        // Сортировка студий по количеству фильмов от большего к меньшему
+        formattedStudios.sort((a, b) => b.movieCount - a.movieCount);
+
         // Пятый блок с таблицей фильмов у персоны
         const personsWithMovieCount: { name: string; _count: { movies: number } }[] =
             await prisma.person.findMany({
@@ -91,6 +94,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
                 personName: person.name,
                 movieCount: person._count.movies,
             }));
+
+        // Сортировка персон по количеству фильмов от большего к меньшему
+        formattedPersons.sort((a, b) => b.movieCount - a.movieCount);
 
         return NextResponse.json({
             movieCount,
