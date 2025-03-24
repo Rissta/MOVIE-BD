@@ -1,6 +1,6 @@
-"use client"; // Обязательно для использования React-хуков в Next.js 13+
+"use client";
 import React, { useState, useEffect } from "react";
-import { Input, MultiSelect, Button, Select } from "@mantine/core";
+import { Input, MultiSelect, Button, Select, Loader } from "@mantine/core";
 import { IconCheck, IconCircleX, IconPlus, IconSelect } from "@tabler/icons-react";
 
 // Интерфейс для данных о персоне
@@ -28,17 +28,85 @@ export default function AddPeople() {
   const [nationalities, setNationalities] = useState<string[]>([]);
   const [roles, setRoles] = useState<string[]>([]);
   const [movies, setMovies] = useState<{ value: string; label: string }[]>([]);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true); // Новое состояние для загрузки данных
+  const [errors, setErrors] = useState<Record<string, string>>({}); // Ошибки валидации
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("/api/administration/add/people/select-data");
-      const data = await response.json();
-      setNationalities(data.nationalities);
-      setRoles(data.roles);
-      setMovies(data.movies);
+      try {
+        setIsLoading(true);
+        const response = await fetch("/api/administration/add/people/select-data");
+        const data = await response.json();
+        setNationalities(data.nationalities);
+        setRoles(data.roles);
+        setMovies(data.movies);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
     fetchData();
   }, []);
+
+  // Валидация формы
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.name) newErrors.name = "ФИО обязательно.";
+    if (!formData.birthDate || !/^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.\d{4}$/.test(formData.birthDate))
+      newErrors.birthDate = "Дата рождения должна быть в формате dd.mm.yyyy.";
+    if (!formData.nationality) newErrors.nationality = "Национальность обязательна.";
+    if (!formData.role) newErrors.role = "Роль обязательна.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    setIsUploading(true);
+    try {
+      const response = await fetch("/api/administration/add/people/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        alert("Персона успешно создана!");
+        setFormData({
+          name: "",
+          nationality: "",
+          role: "",
+          birthDate: "",
+          movieIds: [],
+        });
+        setSelectedValues([]);
+        setSearchValue("");
+        setErrors({});
+      } else {
+        alert("Ошибка при создании персоны.");
+      }
+    } catch (error) {
+      console.error("Error creating person:", error);
+      alert("Произошла ошибка при отправке данных.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+  };
 
   const toggleNationalityField = () => {
     setSweethcNationality((prev) => !prev);
@@ -57,38 +125,6 @@ export default function AddPeople() {
     setSearchValue(value);
   };
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const response = await fetch("/api/administration/add/people/add", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
-
-    if (response.ok) {
-      alert("Персона успешно создана!");
-      setFormData({
-        name: "",
-        nationality: "",
-        role: "",
-        birthDate: "",
-        movieIds: [],
-      });
-      setSelectedValues([]);
-      setSearchValue("");
-    } else {
-      alert("Ошибка при создании персоны.");
-    }
-  };
-
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-[75vw] mx-auto mt-10">
       {/* Блок с полями ввода */}
@@ -103,10 +139,17 @@ export default function AddPeople() {
             radius="md"
             placeholder="Введите ФИО"
             styles={{
-              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#fff" },
+              input: {
+                backgroundColor: "#27272a",
+                borderColor: errors.name ? "red" : "#27272a",
+                color: "#fff",
+              },
             }}
           />
+          {errors.name && <p className="text-red-500 h-0">{errors.name}</p>}
         </Input.Wrapper>
+
+        {/* Дата рождения */}
         <Input.Wrapper label="Дата рождения" className="text-amber-50" size="lg">
           <Input
             name="birthDate"
@@ -114,13 +157,19 @@ export default function AddPeople() {
             onChange={handleInputChange}
             size="lg"
             radius="md"
-            placeholder="Введите дату рождения"
+            placeholder="Введите дату рождения (dd.mm.yyyy)"
             styles={{
-              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#fff" },
+              input: {
+                backgroundColor: "#27272a",
+                borderColor: errors.birthDate ? "red" : "#27272a",
+                color: "#fff",
+              },
             }}
           />
+          {errors.birthDate && <p className="text-red-500 h-0">{errors.birthDate}</p>}
         </Input.Wrapper>
 
+        {/* Национальность */}
         {!sweethcNationality ? (
           <div>
             <Select
@@ -129,17 +178,34 @@ export default function AddPeople() {
               allowDeselect
               label="Национальность"
               className="text-amber-50"
-              placeholder="Выберите национальность"
+              placeholder={isLoading ? "Загрузка..." : "Выберите национальность"}
               data={nationalities}
               value={formData.nationality}
               onChange={(value) =>
                 setFormData((prev) => ({ ...prev, nationality: value || "" }))
               }
               styles={{
-                input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
-                dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
+                input: {
+                  backgroundColor: "#27272a",
+                  borderColor: errors.nationality ? "red" : "#27272a",
+                  color: "#71717b",
+                },
+                dropdown: {
+                  backgroundColor: "#27272a",
+                  border: "3px solid #171717",
+                  color: "#71717b",
+                },
               }}
+              disabled={isLoading}
             />
+            {isLoading && (
+              <div className="flex justify-center mt-2">
+                <Loader size="sm" color="yellow" />
+              </div>
+            )}
+            {errors.nationality && (
+              <p className="text-red-500 h-0">{errors.nationality}</p>
+            )}
             <div className="bg-zinc-800 rounded-2xl justify-self-end mt-6">
               <Button
                 onClick={toggleNationalityField}
@@ -163,10 +229,17 @@ export default function AddPeople() {
                 radius="md"
                 placeholder="Введите национальность"
                 styles={{
-                  input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#fff" },
+                  input: {
+                    backgroundColor: "#27272a",
+                    borderColor: errors.nationality ? "red" : "#27272a",
+                    color: "#fff",
+                  },
                 }}
               />
             </Input.Wrapper>
+            {errors.nationality && (
+              <p className="text-red-500 h-0">{errors.nationality}</p>
+            )}
             <div className="bg-zinc-800 rounded-2xl justify-self-end mt-6">
               <Button
                 onClick={toggleNationalityField}
@@ -181,6 +254,7 @@ export default function AddPeople() {
           </div>
         )}
 
+        {/* Роль */}
         {!sweethcRole ? (
           <div>
             <Select
@@ -189,17 +263,32 @@ export default function AddPeople() {
               allowDeselect
               label="Роль"
               className="text-amber-50"
-              placeholder="Выберите роль"
+              placeholder={isLoading ? "Загрузка..." : "Выберите роль"}
               data={roles}
               value={formData.role}
               onChange={(value) =>
                 setFormData((prev) => ({ ...prev, role: value || "" }))
               }
               styles={{
-                input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
-                dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
+                input: {
+                  backgroundColor: "#27272a",
+                  borderColor: errors.role ? "red" : "#27272a",
+                  color: "#71717b",
+                },
+                dropdown: {
+                  backgroundColor: "#27272a",
+                  border: "3px solid #171717",
+                  color: "#71717b",
+                },
               }}
+              disabled={isLoading}
             />
+            {isLoading && (
+              <div className="flex justify-center mt-2">
+                <Loader size="sm" color="yellow" />
+              </div>
+            )}
+            {errors.role && <p className="text-red-500 h-0">{errors.role}</p>}
             <div className="bg-zinc-800 rounded-2xl justify-self-end mt-6">
               <Button
                 onClick={toggleRoleField}
@@ -223,10 +312,15 @@ export default function AddPeople() {
                 radius="md"
                 placeholder="Введите роль"
                 styles={{
-                  input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#fff" },
+                  input: {
+                    backgroundColor: "#27272a",
+                    borderColor: errors.role ? "red" : "#27272a",
+                    color: "#fff",
+                  },
                 }}
               />
             </Input.Wrapper>
+            {errors.role && <p className="text-red-500 h-0">{errors.role}</p>}
             <div className="bg-zinc-800 rounded-2xl justify-self-end mt-6">
               <Button
                 onClick={toggleRoleField}
@@ -244,11 +338,12 @@ export default function AddPeople() {
 
       {/* Выбор фильмов */}
       <MultiSelect
+        disabled={isLoading}
         size="lg"
         radius="md"
         className="w-full text-amber-50"
         label="Фильм"
-        placeholder={!selectedValues.length && !searchValue ? "Выбрать фильм" : ""}
+        placeholder={ isLoading ? "Загрузка..." : (!selectedValues.length && !searchValue ? "Выбрать фильм" : "")}
         data={movies}
         value={selectedValues}
         onChange={handleChange}
@@ -265,12 +360,33 @@ export default function AddPeople() {
           pill: { backgroundColor: "#ffdf20", color: "#171717", borderColor: "#ffdf20" },
         }}
       />
-
+      {isLoading && (
+        <div className="flex justify-center mt-2">
+          <Loader size="sm" color="yellow" />
+        </div>
+      )}
       {/* Кнопки действий */}
-      <div className="flex justify-center items-center space-x-10 mt-10">
+      <div className="flex justify-center items-center space-x-10 mt-8">
         <div className="bg-yellow-300 rounded-2xl">
-          <Button type="submit" variant="subtle" color="dark.8" size="xl" leftSection={<IconCheck size={30} />}>
-            Сохранить
+          <Button
+            type="submit"
+            disabled={isUploading}
+            variant="subtle"
+            color="dark.8"
+            size="xl"
+            radius="lg"
+          >
+            {!isUploading ? (
+              <div className="flex items-center">
+                <p>Сохранить</p>
+                <IconCheck size={30} />
+              </div>
+            ) : (
+              <div className="flex items-center">
+                <p>Сохранение</p>
+                <Loader color="dark" size="md" className="ml-2" />
+              </div>
+            )}
           </Button>
         </div>
       </div>

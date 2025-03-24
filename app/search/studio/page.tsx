@@ -31,6 +31,7 @@ export default function StudioDirectory() {
 
   const fetchData = async () => {
     try {
+      setActivePage(1);
       setIsLoading(true); // Начало загрузки
       const queryParams = new URLSearchParams(filters).toString();
       const response = await fetch(`/api/search/studio?${queryParams}`);
@@ -217,5 +218,6 @@ export default function StudioDirectory() {
         />
       </div>
     </div>
+    
   );
 }

@@ -69,9 +69,12 @@ export default function Search() {
         });
 
         if (!response.ok) {
-            throw new Error('Ошибка при удалении человека');
+            alert("Ошибка при удалении персоны.");
+            throw new Error('Ошибка при удалении персоны');
         }
-
+        else {
+          alert("Персона успешно удалёна!");
+        }
         // Удаляем человека из состояния
         setPersons((prevPersons) => prevPersons.filter((person) => person.id !== id));
     } catch (error) {
@@ -84,6 +87,7 @@ export default function Search() {
   // Загрузка данных из API
   const fetchData = async () => {
     try {
+      setActivePage(1);
       setIsLoading(true); // Начало загрузки
       const queryParams = new URLSearchParams(filters).toString();
       console.log("Отправляемый запрос:", `/api/search/people?${queryParams}`);
@@ -281,7 +285,7 @@ export default function Search() {
                       disabled={isDelete} // Блокировка кнопки
                       onClick={() => handleDeletePerson(item.id)}
                       >
-                      <IconX size={35} />
+                      {isDelete? <Loader color="dark" size="md" className="ml-2" /> : <IconX size={35} />}
                     </Button>
                   </div>
                 </div>

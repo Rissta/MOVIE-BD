@@ -77,6 +77,7 @@ export default function Search() {
 
   const fetchData = async () => {
     try {
+        setActivePage(1);
         setIsLoading(true); // Начало загрузки
         const queryParams = new URLSearchParams(filters).toString();
         console.log("Отправляемый запрос:", `/api/search/movie?${queryParams}`);

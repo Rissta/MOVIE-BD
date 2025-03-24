@@ -40,25 +40,25 @@ export async function POST(request: Request) {
       },
     });
 
-    // Создание награды (если данные предоставлены)
-    if (award && award.name && award.category && award.awardDate) {
+    // Создание награды (если указан хотя бы один из атрибутов)
+    if (award && (award.name || award.category || award.awardDate)) {
       await prisma.award.create({
         data: {
-          awardName: award.name,
-          category: award.category,
-          awardDate: award.awardDate,
+          awardName: award.name || "", // Если не указан, сохраняем как null
+          category: award.category || "", // Если не указан, сохраняем как null
+          awardDate: award.awardDate || "", // Если не указан, сохраняем как null
           movieId: movie.id,
         },
       });
     }
 
-    // Создание рейтинга (если данные предоставлены)
-    if (rating && rating.type && rating.reviewCount && rating.value) {
+    // Создание рейтинга (если указан хотя бы один из атрибутов)
+    if (rating && (rating.type || rating.reviewCount || rating.value)) {
       await prisma.rating.create({
         data: {
-          ratingType: rating.type,
-          reviewCount: parseInt(rating.reviewCount, 10),
-          ratingValue: parseFloat(rating.value),
+          ratingType: rating.type || "", // Если не указан, сохраняем как null
+          reviewCount: rating.reviewCount ? parseInt(rating.reviewCount, 10) : 0, // Если не указан, сохраняем как null
+          ratingValue: rating.value ? parseFloat(rating.value) : 0, // Если не указан, сохраняем как null
           movieId: movie.id,
         },
       });

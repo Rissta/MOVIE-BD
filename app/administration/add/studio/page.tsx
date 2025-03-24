@@ -1,6 +1,6 @@
-"use client"; // Обязательно для использования React-хуков в Next.js 13+
+"use client";
 import React, { useState, useEffect } from "react";
-import { Input, MultiSelect, Button, Select } from "@mantine/core";
+import { Input, MultiSelect, Button, Select, Loader } from "@mantine/core";
 import { IconCheck, IconCircleX, IconPlus, IconSelect } from "@tabler/icons-react";
 
 // Интерфейс для данных о студии
@@ -24,16 +24,85 @@ export default function AddStudio() {
   const [sweethcCountry, setSweethcCountry] = useState<boolean>(false);
   const [countries, setCountries] = useState<string[]>([]);
   const [movies, setMovies] = useState<{ value: string; label: string }[]>([]);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true); // Новое состояние для загрузки данных
+  const [errors, setErrors] = useState<Record<string, string>>({}); // Ошибки валидации
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch("/api/administration/add/studio/select-data");
-      const data = await response.json();
-      setCountries(data.countries);
-      setMovies(data.movies);
+      try {
+        setIsLoading(true);
+        const response = await fetch("/api/administration/add/studio/select-data");
+        const data = await response.json();
+        setCountries(data.countries);
+        setMovies(data.movies);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
     fetchData();
   }, []);
+
+  // Валидация формы
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.name) newErrors.name = "Название студии обязательно.";
+    if (!formData.country) newErrors.country = "Страна обязательна.";
+    if (
+      !formData.foundationDate ||
+      !/^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.\d{4}$/.test(formData.foundationDate)
+    )
+      newErrors.foundationDate = "Дата должна быть в формате dd.mm.yyyy.";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    setIsUploading(true);
+    try {
+      const response = await fetch("/api/administration/add/studio/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        alert("Студия успешно создана!");
+        setFormData({
+          name: "",
+          country: "",
+          foundationDate: "",
+          movieIds: [],
+        });
+        setSelectedValues([]);
+        setSearchValue("");
+        setErrors({});
+      } else {
+        alert("Ошибка при создании студии.");
+      }
+    } catch (error) {
+      console.error("Error creating studio:", error);
+      alert("Произошла ошибка при отправке данных.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+  };
 
   const toggleCountryField = () => {
     setSweethcCountry((prev) => !prev);
@@ -46,37 +115,6 @@ export default function AddStudio() {
 
   const handleSearchChange = (value: string) => {
     setSearchValue(value);
-  };
-
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const response = await fetch("/api/administration/add/studio/add", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    });
-
-    if (response.ok) {
-      alert("Студия успешно создана!");
-      setFormData({
-        name: "",
-        country: "",
-        foundationDate: "",
-        movieIds: [],
-      });
-      setSelectedValues([]);
-      setSearchValue("");
-    } else {
-      alert("Ошибка при создании студии.");
-    }
   };
 
   return (
@@ -93,11 +131,17 @@ export default function AddStudio() {
             radius="md"
             placeholder="Введите название студии"
             styles={{
-              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#fff" },
+              input: {
+                backgroundColor: "#27272a",
+                borderColor: errors.name ? "red" : "#27272a",
+                color: "#fff",
+              },
             }}
           />
+          {errors.name && <p className="text-red-500 h-0">{errors.name}</p>}
         </Input.Wrapper>
 
+        {/* Страна */}
         {!sweethcCountry ? (
           <div>
             <Select
@@ -106,17 +150,32 @@ export default function AddStudio() {
               allowDeselect
               label="Страна"
               className="text-amber-50"
-              placeholder="Выберите страну"
+              placeholder={isLoading ? "Загрузка..." : "Выберите страну"}
               data={countries}
               value={formData.country}
               onChange={(value) =>
                 setFormData((prev) => ({ ...prev, country: value || "" }))
               }
               styles={{
-                input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
-                dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
+                input: {
+                  backgroundColor: "#27272a",
+                  borderColor: errors.country ? "red" : "#27272a",
+                  color: "#71717b",
+                },
+                dropdown: {
+                  backgroundColor: "#27272a",
+                  border: "3px solid #171717",
+                  color: "#71717b",
+                },
               }}
+              disabled={isLoading}
             />
+            {isLoading && (
+              <div className="flex justify-center mt-2">
+                <Loader size="sm" color="yellow" />
+              </div>
+            )}
+            {errors.country && <p className="text-red-500 h-0">{errors.country}</p>}
             <div className="bg-zinc-800 rounded-2xl justify-self-end mt-6">
               <Button
                 onClick={toggleCountryField}
@@ -140,10 +199,15 @@ export default function AddStudio() {
                 radius="md"
                 placeholder="Введите страну"
                 styles={{
-                  input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#fff" },
+                  input: {
+                    backgroundColor: "#27272a",
+                    borderColor: errors.country ? "red" : "#27272a",
+                    color: "#fff",
+                  },
                 }}
               />
             </Input.Wrapper>
+            {errors.country && <p className="text-red-500 h-0">{errors.country}</p>}
             <div className="bg-zinc-800 rounded-2xl justify-self-end mt-6">
               <Button
                 onClick={toggleCountryField}
@@ -158,6 +222,7 @@ export default function AddStudio() {
           </div>
         )}
 
+        {/* Дата создания */}
         <Input.Wrapper label="Дата создания" className="text-amber-50" size="lg">
           <Input
             name="foundationDate"
@@ -165,21 +230,29 @@ export default function AddStudio() {
             onChange={handleInputChange}
             size="lg"
             radius="md"
-            placeholder="Введите дату создания"
+            placeholder="Введите дату создания (dd.mm.yyyy)"
             styles={{
-              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#fff" },
+              input: {
+                backgroundColor: "#27272a",
+                borderColor: errors.foundationDate ? "red" : "#27272a",
+                color: "#fff",
+              },
             }}
           />
+          {errors.foundationDate && (
+            <p className="text-red-500 h-0">{errors.foundationDate}</p>
+          )}
         </Input.Wrapper>
       </div>
 
       {/* Выбор фильмов */}
       <MultiSelect
+        disabled={isLoading}
         size="lg"
         radius="md"
         className="w-full text-amber-50"
         label="Фильм"
-        placeholder={!selectedValues.length && !searchValue ? "Выбрать фильм" : ""}
+        placeholder={ isLoading ? "Загрузка..." : (!selectedValues.length && !searchValue ? "Выбрать фильм" : "")}
         data={movies}
         value={selectedValues}
         onChange={handleChange}
@@ -196,12 +269,33 @@ export default function AddStudio() {
           pill: { backgroundColor: "#ffdf20", color: "#171717", borderColor: "#ffdf20" },
         }}
       />
-
+      {isLoading && (
+        <div className="flex justify-center mt-2">
+          <Loader size="sm" color="yellow" />
+        </div>
+      )}
       {/* Кнопки действий */}
-      <div className="flex justify-center items-center space-x-10 mt-10">
+      <div className="flex justify-center items-center space-x-10 mt-8">
         <div className="bg-yellow-300 rounded-2xl">
-          <Button type="submit" variant="subtle" color="dark.8" size="xl" leftSection={<IconCheck size={30} />}>
-            Сохранить
+          <Button
+            type="submit"
+            disabled={isUploading}
+            variant="subtle"
+            color="dark.8"
+            size="xl"
+            radius="lg"
+          >
+            {!isUploading ? (
+              <div className="flex items-center">
+                <p>Сохранить</p>
+                <IconCheck size={30} />
+              </div>
+            ) : (
+              <div className="flex items-center">
+                <p>Сохранение</p>
+                <Loader color="dark" size="md" className="ml-2" />
+              </div>
+            )}
           </Button>
         </div>
       </div>

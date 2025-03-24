@@ -38,7 +38,11 @@ export default function StudioDirectory() {
           });
   
           if (!response.ok) {
+              alert("Ошибка при удалении студии");
               throw new Error('Ошибка при удалении студии');
+          }
+          else {
+            alert("Студия успешно удалёна!");
           }
   
           // Удаляем студию из состояния
@@ -52,6 +56,7 @@ export default function StudioDirectory() {
 
   const fetchData = async () => {
     try {
+      setActivePage(1);
       setIsLoading(true); // Начало загрузки
       const queryParams = new URLSearchParams(filters).toString();
       const response = await fetch(`/api/search/studio?${queryParams}`);
@@ -215,18 +220,18 @@ export default function StudioDirectory() {
                   </div>
                 </div>
                 <div className="flex justify-center items-center">
-                    <div className="bg-yellow-300 rounded-4xl">
-                        <Button
-                            size="md"
-                            variant="subtle"
-                            color="dark.8"
-                            radius="xl"
-                            disabled={isDelete} // Блокировка кнопки
-                            onClick={() => handleDeleteStudio(studio.id)}
-                        >
-                            <IconX size={35} />
-                        </Button>
-                    </div>
+                  <div className="bg-yellow-300 rounded-4xl">
+                    <Button
+                      size="md"
+                      variant="subtle"
+                      color="dark.8"
+                      radius="xl"
+                      disabled={isDelete} // Блокировка кнопки
+                      onClick={() => handleDeleteStudio(studio.id)}
+                      >
+                      {isDelete? <Loader color="dark" size="md" className="ml-2" /> : <IconX size={35} />}
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>

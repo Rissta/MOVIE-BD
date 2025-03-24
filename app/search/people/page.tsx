@@ -61,6 +61,7 @@ export default function Search() {
   // Загрузка данных из API
   const fetchData = async () => {
     try {
+      setActivePage(1);
       setIsLoading(true); // Начало загрузки
       const queryParams = new URLSearchParams(filters).toString();
       console.log("Отправляемый запрос:", `/api/search/people?${queryParams}`);

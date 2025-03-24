@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Button, Input, Loader, Modal, Pagination, Select, Text } from "@mantine/core";
-import { useCallback } from 'react';
 import {
   IconLicense,
   IconMessage,
@@ -16,8 +15,6 @@ interface Person {
   name: string;
   role: string;
 }
-
-
 interface Film {
   id: number;
   title: string;
@@ -38,7 +35,6 @@ export default function Search() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isDelete, setIsDelete] = useState<boolean>(false);
 
-
   // Состояния для данных
   const [movies, setMovies] = useState<Film[]>([]);
   const [genres, setGenres] = useState<string[]>([]);
@@ -46,6 +42,7 @@ export default function Search() {
   const [studios, setStudios] = useState<string[]>([]);
   const [countries, setCountries] = useState<string[]>([]);
   const [years, setYears] = useState<string[]>([]);
+
   // Состояние для ошибки рейтинга
   const [ratingError, setRatingError] = useState<string | null>(null);
 
@@ -60,35 +57,24 @@ export default function Search() {
     minRating: "",
   });
 
-// Функция для проверки корректности рейтинга
-const validateRating = (value: string): boolean => {
-  const ratingRegex = /^\d+(\.\d*)?$/; // Разрешаем частичный ввод после точки
-  // Проверяем формат числа
-  if (!ratingRegex.test(value)) {
-    return false;
-  }
+  // Функция для проверки корректности рейтинга
+  const validateRating = (value: string): boolean => {
+    const ratingRegex = /^(?:\d(\.\d?)?)?$/; // Разрешаем числа формата "7", "7.", "7.6"
+    return ratingRegex.test(value);
+  };
 
-  // Преобразуем значение в число
-  const numericValue = parseFloat(value);
+  // Обработчик изменения значения рейтинга
+  const handleRatingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
 
-  // Проверяем диапазон: больше 0 и меньше 10
-  return numericValue > 0 && numericValue < 10;
-};
+    if (value === "" || validateRating(value)) {
+      setRatingError(null); // Очищаем ошибку, если значение корректно
+    } else {
+      setRatingError("Некорректный формат рейтинга (например, '7', '7.', '7.6')");
+    }
 
-// Обработчик изменения значения рейтинга
-const handleRatingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const value = e.target.value;
-
-  // Проверяем корректность значения
-  if (value === "" || validateRating(value)) {
-    setRatingError(null); // Очищаем ошибку, если значение корректно
-  } else {
-    setRatingError("Некорректный формат рейтинга (например, '7.6')"); // Устанавливаем сообщение об ошибке
-  }
-
-  // Обновляем фильтры
-  handleInputChange("minRating", value);
-};
+    handleInputChange("minRating", value);
+  };
 
   // Состояние для пагинации
   const [activePage, setActivePage] = useState<number>(1);
@@ -111,52 +97,54 @@ const handleRatingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
   const handleDelete = async (id: number) => {
     try {
-        setIsDelete(true);
-        const response = await fetch(`/api/administration/remove/movie?id=${id}`, {
-            method: 'DELETE',
-        });
-
-        if (!response.ok) {
-            throw new Error('Ошибка при удалении фильма');
-        }
-
-        // Удаляем фильм из состояния
-        setMovies((prevMovies) => prevMovies.filter((movie) => movie.id !== id));
+      setIsDelete(true);
+      const response = await fetch(`/api/administration/remove/movie?id=${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        alert("Ошибка при удалении фильма");
+        throw new Error("Ошибка при удалении фильма");
+      } else {
+        alert("Фильм успешно удалён!");
+      }
+      // Удаляем фильм из состояния
+      setMovies((prevMovies) => prevMovies.filter((movie) => movie.id !== id));
     } catch (error) {
-        console.error('Ошибка при удалении фильма:', error);
+      console.error("Ошибка при удалении фильма:", error);
     } finally {
       setIsDelete(false); // Завершение загрузки
     }
   };
 
-  const fetchData = useCallback(async () => {
+  const fetchData = async () => {
     try {
-        setIsLoading(true); // Начало загрузки
-        const queryParams = new URLSearchParams(filters).toString();
-        const response = await fetch(`/api/search/movie?${queryParams}`);
-        if (!response.ok) throw new Error("Ошибка при загрузке данных");
-        const data = await response.json();
-        setMovies(data.movies || []);
-        setGenres(data.filters.genres || []);
-        setPersons(data.filters.persons || []);
-        setStudios(data.filters.studios || []);
-        setCountries(data.filters.countries || []);
-        setYears(data.filters.years || []);
+      setActivePage(1);
+      setIsLoading(true); // Начало загрузки
+      const queryParams = new URLSearchParams(filters).toString();
+      const response = await fetch(`/api/search/movie?${queryParams}`);
+      if (!response.ok) throw new Error("Ошибка при загрузке данных");
+      const data = await response.json();
+      setMovies(data.movies || []);
+      setGenres(data.filters.genres || []);
+      setPersons(data.filters.persons || []);
+      setStudios(data.filters.studios || []);
+      setCountries(data.filters.countries || []);
+      setYears(data.filters.years || []);
     } catch (error) {
-        console.error("Ошибка при загрузке данных:", error);
+      console.error("Ошибка при загрузке данных:", error);
     } finally {
-        setIsLoading(false); // Завершение загрузки
+      setIsLoading(false); // Завершение загрузки
     }
-}, [filters]); // Указываем зависимость от filters
+  };
 
-useEffect(() => {
+  useEffect(() => {
     console.log("Фильтры изменились, вызываем fetchData");
     fetchData();
-}, [filters]);
+  }, [filters]);
 
-useEffect(() => {
+  useEffect(() => {
     console.log("Текущие фильтры:", filters);
-}, [filters]);
+  }, [filters]);
 
   // Обработчик изменений в полях ввода
   const handleInputChange = (field: string, value: string) => {
@@ -167,9 +155,8 @@ useEffect(() => {
   };
 
   return (
-    
     <div className="w-full max-w-[120vw] mx-auto">
-      {/* Модальное окно "Описание" */}
+      {/* Модальные окна */}
       <Modal
         opened={openedDescription}
         onClose={closeDescription}
@@ -188,7 +175,6 @@ useEffect(() => {
         </Text>
       </Modal>
 
-      {/* Модальное окно "Персоны" */}
       <Modal
         opened={openedPersons}
         onClose={closePersons}
@@ -216,7 +202,6 @@ useEffect(() => {
         </div>
       </Modal>
 
-      {/* Модальное окно "Жанры" */}
       <Modal
         opened={openedGenres}
         onClose={closeGenres}
@@ -250,15 +235,15 @@ useEffect(() => {
             />
           </div>
           <div className="bg-yellow-300 rounded-2xl ml-6">
-              <Button
-                  variant="subtle"
-                  color="dark.8"
-                  size="xl"
-                  leftSection={<IconSearch size={30} />}
-                  onClick={fetchData} // Вызываем fetchData при нажатии
-              >
-                  Поиск
-              </Button>
+            <Button
+              variant="subtle"
+              color="dark.8"
+              size="xl"
+              leftSection={<IconSearch size={30} />}
+              onClick={fetchData}
+            >
+              Поиск
+            </Button>
           </div>
         </div>
       </div>
@@ -343,17 +328,17 @@ useEffect(() => {
             className="text-amber-50"
             label="Рейтинг"
             size="md"
-            error={ratingError} // Отображаем сообщение об ошибке
+            error={ratingError}
           >
             <Input
               size="lg"
               radius="md"
               placeholder="От"
-              onChange={handleRatingChange} // Используем новый обработчик
+              onChange={handleRatingChange}
               styles={{
                 input: {
                   backgroundColor: "#27272a",
-                  borderColor: ratingError ? "red" : "#27272a", // Меняем цвет рамки при ошибке
+                  borderColor: ratingError ? "red" : "#27272a",
                   color: "#71717b",
                 },
               }}
@@ -363,105 +348,119 @@ useEffect(() => {
       </div>
 
       {/* Блок с данными */}
-      {!isLoading ? 
       <div>
-      {currentPageData.map((item) => (
-        <div key={item.id} className="ml-15 mr-15 mt-2 bg-zinc-800 pt-4 pb-4 mb-3 rounded-2xl pr-10 pl-10">
-          <div className="grid grid-cols-9 gap-x-4 text-2xl text-amber-50 h-18">
-            <div className="items-center">
-              <p className="font-extralight flex justify-center items-center text-base">Название</p>
-              <p className="h-9 flex justify-center items-center rounded-2xl text-base mt-3 text-center">{item.title}</p>
-            </div>
-            <div className="items-center">
-              <p className="font-extralight flex justify-center items-center text-base">Рейтинг</p>
-              <p className="h-10 flex justify-center items-center rounded-2xl text-xl mt-3 text-balance">{item.rating}</p>
-            </div>
-            <div className="items-center">
-              <p className="font-extralight flex justify-center items-center text-base">Длительность</p>
-              <p className="h-10 flex justify-center items-center rounded-2xl text-xl mt-3 text-balance">{item.duration}</p>
-            </div>
-            <div className="items-center">
-              <p className="font-extralight flex justify-center items-center text-base">Страна</p>
-              <p className="h-10 flex justify-center items-center rounded-2xl text-xl mt-3 text-balance">{item.country}</p>
-            </div>
-            <div className="items-center">
-              <p className="font-extralight flex justify-center items-center text-base">Студия</p>
-              <p className="h-10 flex justify-center items-center rounded-2xl text-xl mt-3 text-balance">{item.studio}</p>
-            </div>
-            <div className="items-center">
-              <p className="font-extralight flex justify-center items-center text-base">Жанры</p>
-              <div className="flex justify-center">
-                <div className="bg-zinc-900 rounded-2xl mt-3">
-                  <Button
-                    size="base"
-                    variant="subtle"
-                    color="white"
-                    radius="lg"
-                    onClick={() => {
-                      setSelectedFilm(item);
-                      openGenres();
-                    }}
-                  >
-                    <IconLicense size={30} />
-                  </Button>
+        {isLoading ? (
+          <div className="flex justify-center items-center mt-6">
+            <p className="font-extralight flex justify-center items-center text-2xl text-amber-50">Загрузка</p>
+            <Loader color="yellow" size="md" className="ml-2" />
+          </div>
+        ) : currentPageData.length > 0 ? (
+          currentPageData.map((item) => (
+            <div key={item.id} className="ml-15 mr-15 mt-2 bg-zinc-800 pt-4 pb-4 mb-3 rounded-2xl pr-10 pl-10">
+              <div className="grid grid-cols-9 gap-x-4 text-2xl text-amber-50 h-18">
+                <div className="items-center">
+                  <p className="font-extralight flex justify-center items-center text-base">Название</p>
+                  <p className="h-9 flex justify-center items-center rounded-2xl text-base mt-3 text-center">{item.title}</p>
                 </div>
-              </div>
-            </div>
-            <div className="items-center">
-              <p className="font-extralight flex justify-center items-center text-base">Персоны</p>
-              <div className="flex justify-center">
-                <div className="bg-zinc-900 rounded-2xl mt-3">
-                  <Button
-                    size="base"
-                    variant="subtle"
-                    color="white"
-                    radius="lg"
-                    onClick={() => {
-                      setSelectedFilm(item);
-                      openPersons();
-                    }}
-                  >
-                    <IconUsersGroup size={30} />
-                  </Button>
+                <div className="items-center">
+                  <p className="font-extralight flex justify-center items-center text-base">Рейтинг</p>
+                  <p className="h-10 flex justify-center items-center rounded-2xl text-xl mt-3 text-balance">{item.rating}</p>
                 </div>
-              </div>
-            </div>
-            <div className="items-center">
-              <p className="font-extralight flex justify-center items-center text-base">Описание</p>
-              <div className="flex justify-center">
-                <div className="bg-zinc-900 rounded-2xl mt-3">
-                  <Button
-                    size="base"
-                    variant="subtle"
-                    color="white"
-                    onClick={() => {
-                      setSelectedFilm(item);
-                      openDescription();
-                    }}
-                    radius="lg"
-                  >
-                    <IconMessage size={30} />
-                  </Button>
+                <div className="items-center">
+                  <p className="font-extralight flex justify-center items-center text-base">Длительность</p>
+                  <p className="h-10 flex justify-center items-center rounded-2xl text-xl mt-3 text-balance">{item.duration}</p>
                 </div>
-              </div>
-            </div>
-            <div className="flex justify-center items-center">
-              <div className="bg-yellow-300 rounded-4xl">
-                  <Button
+                <div className="items-center">
+                  <p className="font-extralight flex justify-center items-center text-base">Страна</p>
+                  <p className="h-10 flex justify-center items-center rounded-2xl text-xl mt-3 text-balance">{item.country}</p>
+                </div>
+                <div className="items-center">
+                  <p className="font-extralight flex justify-center items-center text-base">Студия</p>
+                  <p className="h-10 flex justify-center items-center rounded-2xl text-xl mt-3 text-balance">{item.studio}</p>
+                </div>
+                <div className="items-center">
+                  <p className="font-extralight flex justify-center items-center text-base">Жанры</p>
+                  <div className="flex justify-center">
+                    <div className="bg-zinc-900 rounded-2xl mt-3">
+                      <Button
+                        size="base"
+                        variant="subtle"
+                        color="white"
+                        radius="lg"
+                        onClick={() => {
+                          setSelectedFilm(item);
+                          openGenres();
+                        }}
+                      >
+                        <IconLicense size={30} />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                <div className="items-center">
+                  <p className="font-extralight flex justify-center items-center text-base">Персоны</p>
+                  <div className="flex justify-center">
+                    <div className="bg-zinc-900 rounded-2xl mt-3">
+                      <Button
+                        size="base"
+                        variant="subtle"
+                        color="white"
+                        radius="lg"
+                        onClick={() => {
+                          setSelectedFilm(item);
+                          openPersons();
+                        }}
+                      >
+                        <IconUsersGroup size={30} />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                <div className="items-center">
+                  <p className="font-extralight flex justify-center items-center text-base">Описание</p>
+                  <div className="flex justify-center">
+                    <div className="bg-zinc-900 rounded-2xl mt-3">
+                      <Button
+                        size="base"
+                        variant="subtle"
+                        color="white"
+                        onClick={() => {
+                          setSelectedFilm(item);
+                          openDescription();
+                        }}
+                        radius="lg"
+                      >
+                        <IconMessage size={30} />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-center items-center">
+                  <div className="bg-yellow-300 rounded-4xl">
+                    <Button
                       size="md"
                       variant="subtle"
                       color="dark.8"
                       radius="xl"
-                      disabled ={isDelete}
+                      disabled={isDelete}
                       onClick={() => handleDelete(item.id)}
-                  >
-                      <IconX size={35} />
-                  </Button>
+                    >
+                      {isDelete ? <Loader color="dark" size="md" className="ml-2" /> : <IconX size={35} />}
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
+          ))
+        ) : (
+          <div className="flex justify-center items-center mt-6">
+            <Text size="lg" style={{ color: "#c0c0c4" }}>
+              Нет данных для отображения
+            </Text>
           </div>
-        </div>
-      ))}
+        )}
+      </div>
+
       {/* Пагинация */}
       <div className="flex justify-center items-center mt-6">
         <Pagination
@@ -473,13 +472,6 @@ useEffect(() => {
           styles={{ dots: { color: "#52525c" } }}
         />
       </div>
-     </div>
-      : 
-      <div className="flex justify-center items-center mt-6">
-        <p className="font-extralight flex justify-center items-center text-2xl text-amber-50">Загрузка</p>
-        <Loader color="yellow" size="md" className="ml-2"/>
-    </div>
-      }
     </div>
   );
 }
