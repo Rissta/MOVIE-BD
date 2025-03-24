@@ -73,17 +73,17 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     // Уникальные значения для фильтров
     const uniqueNationalities = Array.from(
       new Set(filteredPersons.map((person) => person.nationality))
-    ).filter(Boolean);
+    ).filter(Boolean).sort();
 
     const uniqueRoles = Array.from(
       new Set(filteredPersons.map((person) => person.role))
-    ).filter(Boolean);
+    ).filter(Boolean).sort();
 
     const uniqueMovies = Array.from(
       new Set(filteredPersons.flatMap((person) =>
         person.movies.map((movieOnMovie) => movieOnMovie.movie.title)
       ))
-    ).filter(Boolean);
+    ).filter(Boolean).sort();
 
     return NextResponse.json({
       persons: formattedPersons,

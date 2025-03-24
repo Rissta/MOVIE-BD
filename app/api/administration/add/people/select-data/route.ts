@@ -22,13 +22,13 @@ export async function GET() {
     });
 
     // Преобразование данных в формат, подходящий для селектов
-    const formattedNationalities = nationalities.map((item) => item.nationality);
-    const formattedRoles = roles.map((item) => item.role);
+    const formattedNationalities = nationalities.map((item) => item.nationality).sort();
+    const formattedRoles = roles.map((item) => item.role).sort();
 
     const formattedMovies = movies.map((movie) => ({
       value: movie.id,
       label: movie.title,
-    }));
+    })).sort((a, b) => a.label.localeCompare(b.label));
 
     // Возвращение данных в виде JSON
     return NextResponse.json({

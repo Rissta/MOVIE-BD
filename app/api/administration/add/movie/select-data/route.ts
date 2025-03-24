@@ -27,18 +27,18 @@ export async function GET() {
     });
 
     // Преобразование данных в формат, подходящий для селектов
-    const formattedCountries = countries.map((item) => item.country);
-    const formattedLanguages = languages.map((item) => item.language);
+    const formattedCountries = countries.map((item) => item.country).sort();
+    const formattedLanguages = languages.map((item) => item.language).sort();
 
     const formattedStudios = studios.map((studio) => ({
       value: studio.id,
       label: studio.studioName,
-    }));
+    })).sort((a, b) => a.label.localeCompare(b.label));
 
     const formattedPersons = persons.map((person) => ({
       value: person.id,
       label: person.name,
-    }));
+    })).sort((a, b) => a.label.localeCompare(b.label));
 
     // Возвращение данных в виде JSON
     return NextResponse.json({

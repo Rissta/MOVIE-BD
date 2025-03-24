@@ -99,25 +99,25 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
 
         const uniqueGenres = Array.from(
             new Set(filteredMovies.flatMap(movie => movie.genre?.split(',') || []).map(g => g.trim()))
-        ).filter(Boolean);
+        ).filter(Boolean).sort();
 
         const uniquePersons = Array.from(
             new Set(filteredMovies.flatMap(movie =>
-                movie.persons.map(p => p.person.name) // Добавляем роль к имени
+                movie.persons.map(p => p.person.name).sort() // Добавляем роль к имени
             ))
-        ).filter(Boolean);
+        ).filter(Boolean).sort();
 
         const uniqueStudios = Array.from(
             new Set(filteredMovies.map(movie => movie.studio?.studioName))
-        ).filter(Boolean);
+        ).filter(Boolean).sort();
 
         const uniqueCountries = Array.from(
             new Set(filteredMovies.map(movie => movie.country))
-        ).filter(Boolean);
+        ).filter(Boolean).sort();
 
         const uniqueYears = Array.from(
             new Set(filteredMovies.map(movie => movie.releaseYear?.toString()))
-        ).filter(Boolean);
+        ).filter(Boolean).sort();
 
         return NextResponse.json({
             movies: formattedMovies,

@@ -17,12 +17,12 @@ export async function GET() {
     });
 
     // Преобразование данных в формат, подходящий для селектов
-    const formattedCountries = countries.map((item) => item.country);
+    const formattedCountries = countries.map((item) => item.country).sort();
 
     const formattedMovies = movies.map((movie) => ({
       value: movie.id,
       label: movie.title,
-    }));
+    })).sort((a, b) => a.label.localeCompare(b.label));
 
     // Возвращение данных в виде JSON
     return NextResponse.json({

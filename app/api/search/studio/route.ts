@@ -62,11 +62,11 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     // Уникальные значения для фильтров
     const uniqueCountries = Array.from(
       new Set(filteredStudios.map((studio) => studio.country))
-    ).filter(Boolean);
+    ).filter(Boolean).sort();
 
     const uniqueMovies = Array.from(
       new Set(filteredStudios.flatMap((studio) => studio.movies.map((movie) => movie.title)))
-    ).filter(Boolean);
+    ).filter(Boolean).sort();
 
     return NextResponse.json({
       studios: formattedStudios,
