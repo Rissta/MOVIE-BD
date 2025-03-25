@@ -67,16 +67,20 @@ export default function AddMovie() {
 
     if (!formData.title) newErrors.title = "Название фильма обязательно.";
     if (!formData.genre) newErrors.genre = "Жанр обязателен.";
-    if (!formData.duration || isNaN(Number(formData.duration)))
+    if (!formData.duration)
+      newErrors.duration = "Длительность обязателена.";
+    else if (isNaN(Number(formData.duration)))
       newErrors.duration = "Длительность должна быть числом.";
     else if (Number(formData.duration) < 30)
       newErrors.duration = "Минимальная длительность фильма - 30 минут.";
     if (!formData.country) newErrors.country = "Страна обязательна.";
     if (!formData.language) newErrors.language = "Язык обязателен.";
-    if (!formData.releaseYear || isNaN(Number(formData.releaseYear)))
+    if (!formData.releaseYear)
+      newErrors.releaseYear = "Год выпуска обязателен.";
+    else if (isNaN(Number(formData.releaseYear)))
       newErrors.releaseYear = "Год выпуска должен быть числом.";
-    else if (Number(formData.releaseYear) < 1850 || Number(formData.releaseYear) > currentYear)
-      newErrors.releaseYear = `Год выпуска должен быть между 1850 и ${currentYear}.`;
+    else if (Number(formData.releaseYear) < 1888 || Number(formData.releaseYear) > currentYear)
+      newErrors.releaseYear = `Год выпуска должен быть между 1888 и ${currentYear}.`;
     if (!formData.description) newErrors.description = "Описание обязательно.";
     if (!formData.studioId) newErrors.studioId = "Студия обязательна.";
     if (formData.personIds.length === 0)
@@ -85,9 +89,9 @@ export default function AddMovie() {
     // Проверка даты награждения
     if (
       formData.award.awardDate &&
-      !/^(0[1-9]|1[0-2])\.(0[1-9]|[12][0-9]|3[01])\.\d{4}$/.test(formData.award.awardDate)
+      !/^\d{4}\.(0[1-9]|1[0-2])\.(0[1-9]|[12][0-9]|3[01])$/.test(formData.award.awardDate)
     ) {
-      newErrors.awardDate = "Дата награждения должна быть в формате mm.dd.yyyy.";
+      newErrors.awardDate = "Дата награждения должна быть в формате yyyy.mm.dd";
     }
 
     // Проверка рейтинга
@@ -310,7 +314,7 @@ export default function AddMovie() {
               }}
             />
             {isLoading && (
-              <div className="flex justify-center mt-2">
+              <div className="flex justify-center mt-2 h-0">
                 <Loader size="sm" color="yellow" />
               </div>
             )}
@@ -379,7 +383,7 @@ export default function AddMovie() {
               }}
             />
             {isLoading && (
-              <div className="flex justify-center mt-2">
+              <div className="flex justify-center mt-2 h-0">
                 <Loader size="sm" color="yellow" />
               </div>
             )}
@@ -481,7 +485,7 @@ export default function AddMovie() {
             }}
           />
           {isLoading && (
-              <div className="flex justify-center mt-2">
+              <div className="flex justify-center mt-2 h-0">
                 <Loader size="sm" color="yellow" />
               </div>
             )}
@@ -515,13 +519,13 @@ export default function AddMovie() {
             }}
           />
           {isLoading && (
-              <div className="flex justify-center mt-2">
+              <div className="flex justify-center mt-2 h-0">
                 <Loader size="sm" color="yellow" />
               </div>
             )}
           {errors.studioId && <p className="text-red-500 h-0">{errors.studioId}</p>}
         </div>
-        <div className="bg-yellow-300 rounded-2xl justify-self-end">
+        {/* <div className="bg-yellow-300 rounded-2xl justify-self-end">
           <Button
             component={Link}
             href="/administration/add/people"
@@ -532,8 +536,8 @@ export default function AddMovie() {
           >
             Создать персону
           </Button>
-        </div>
-        <div className="bg-yellow-300 rounded-2xl justify-self-end">
+        </div> */}
+        {/* <div className="bg-yellow-300 rounded-2xl justify-self-end">
           <Button
             component={Link}
             href="/administration/add/studio"
@@ -544,7 +548,7 @@ export default function AddMovie() {
           >
             Создать студию
           </Button>
-        </div>
+        </div> */}
       </div>
 
       {/* Блок с наградами (необязательный) */}
@@ -583,7 +587,7 @@ export default function AddMovie() {
             onChange={(e) => handleAwardChange(e, "awardDate")}
             size="lg"
             radius="md"
-            placeholder="Введите дату награждения (mm.dd.yyyy)"
+            placeholder="Введите дату награждения (yyyy.mm.dd)"
             styles={{
               input: {
                 backgroundColor: "#27272a",
@@ -599,14 +603,14 @@ export default function AddMovie() {
       {/* Блок с рейтингом (необязательный) */}
       <p className="text-amber-50 text-2xl mt-6">Рейтинг (необязательно)</p>
       <div className="grid grid-cols-3 gap-x-8 gap-y-6 mt-3">
-        <Input.Wrapper label="Тип рейтинга" className="text-amber-50" size="lg">
+        <Input.Wrapper label="Источник рейтинга" className="text-amber-50" size="lg">
           <Input
             name="ratingType"
             value={formData.rating.type || ""}
             onChange={(e) => handleRatingChange(e, "type")}
             size="lg"
             radius="md"
-            placeholder="Введите тип рейтинга"
+            placeholder="Введите источник рейтинга (IMDb, Кинопоиск)"
             styles={{
               input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#fff" },
             }}

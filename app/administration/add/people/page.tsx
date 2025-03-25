@@ -55,8 +55,8 @@ export default function AddPeople() {
     const newErrors: Record<string, string> = {};
 
     if (!formData.name) newErrors.name = "ФИО обязательно.";
-    if (!formData.birthDate || !/^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.\d{4}$/.test(formData.birthDate))
-      newErrors.birthDate = "Дата рождения должна быть в формате dd.mm.yyyy.";
+    if (!formData.birthDate || !/^\d{4}\.(0[1-9]|1[0-2])\.(0[1-9]|[12][0-9]|3[01])$/.test(formData.birthDate))
+      newErrors.birthDate = "Дата рождения должна быть в формате yyyy.mm.dd";
     if (!formData.nationality) newErrors.nationality = "Национальность обязательна.";
     if (!formData.role) newErrors.role = "Роль обязательна.";
 
@@ -157,7 +157,7 @@ export default function AddPeople() {
             onChange={handleInputChange}
             size="lg"
             radius="md"
-            placeholder="Введите дату рождения (dd.mm.yyyy)"
+            placeholder="Введите дату рождения (yyyy.mm.dd)"
             styles={{
               input: {
                 backgroundColor: "#27272a",
@@ -199,7 +199,7 @@ export default function AddPeople() {
               disabled={isLoading}
             />
             {isLoading && (
-              <div className="flex justify-center mt-2">
+              <div className="flex justify-center mt-2 h-0">
                 <Loader size="sm" color="yellow" />
               </div>
             )}
@@ -284,7 +284,7 @@ export default function AddPeople() {
               disabled={isLoading}
             />
             {isLoading && (
-              <div className="flex justify-center mt-2">
+              <div className="flex justify-center mt-2 h-0">
                 <Loader size="sm" color="yellow" />
               </div>
             )}
@@ -361,7 +361,7 @@ export default function AddPeople() {
         }}
       />
       {isLoading && (
-        <div className="flex justify-center mt-2">
+        <div className="flex justify-center mt-2 h-0">
           <Loader size="sm" color="yellow" />
         </div>
       )}
@@ -384,7 +384,7 @@ export default function AddPeople() {
             ) : (
               <div className="flex items-center">
                 <p>Сохранение</p>
-                <Loader color="dark" size="md" className="ml-2" />
+                <Loader color="dark" size="md" className="ml-2 h-0" />
               </div>
             )}
           </Button>

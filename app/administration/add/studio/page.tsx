@@ -48,14 +48,17 @@ export default function AddStudio() {
   // Валидация формы
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
+    const currentYear = new Date().getFullYear();
 
     if (!formData.name) newErrors.name = "Название студии обязательно.";
     if (!formData.country) newErrors.country = "Страна обязательна.";
-    if (
-      !formData.foundationDate ||
-      !/^(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.\d{4}$/.test(formData.foundationDate)
-    )
-      newErrors.foundationDate = "Дата должна быть в формате dd.mm.yyyy.";
+    // if (!formData.foundationDate || !/^\d{4}\.(0[1-9]|1[0-2])\.(0[1-9]|[12][0-9]|3[01])$/.test(formData.foundationDate))
+    //   newErrors.foundationDate = "Дата должна быть в формате yyyy.mm.dd";
+    
+    if (!formData.foundationDate || isNaN(Number(formData.foundationDate)))
+      newErrors.foundationDate = "Год создания обязателен.";
+    else if (Number(formData.foundationDate) < 1893 || Number(formData.foundationDate) > currentYear)
+      newErrors.foundationDate = `Год создания должен быть между 1893 и ${currentYear}.`;
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -171,7 +174,7 @@ export default function AddStudio() {
               disabled={isLoading}
             />
             {isLoading && (
-              <div className="flex justify-center mt-2">
+              <div className="flex justify-center mt-2 h-0">
                 <Loader size="sm" color="yellow" />
               </div>
             )}
@@ -222,15 +225,15 @@ export default function AddStudio() {
           </div>
         )}
 
-        {/* Дата создания */}
-        <Input.Wrapper label="Дата создания" className="text-amber-50" size="lg">
+        {/* Год создания */}
+        <Input.Wrapper label="Год создания" className="text-amber-50" size="lg">
           <Input
             name="foundationDate"
             value={formData.foundationDate}
             onChange={handleInputChange}
             size="lg"
             radius="md"
-            placeholder="Введите дату создания (dd.mm.yyyy)"
+            placeholder="Введите год создания"
             styles={{
               input: {
                 backgroundColor: "#27272a",
@@ -270,7 +273,7 @@ export default function AddStudio() {
         }}
       />
       {isLoading && (
-        <div className="flex justify-center mt-2">
+        <div className="flex justify-center mt-2 h-0">
           <Loader size="sm" color="yellow" />
         </div>
       )}

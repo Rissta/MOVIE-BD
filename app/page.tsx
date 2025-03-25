@@ -113,13 +113,13 @@ export default function Statistic() {
         {/* Блок "Люди" */}
         <div className="h-auto w-full bg-zinc-800 rounded-4xl p-4 shadow-xl shadow-zinc-500/20">
           <div className="flex justify-between items-center mb-4">
-              <p className="font-bold text-yellow-300 text-xl">Люди</p>
+              <p className="font-bold text-yellow-300 text-xl">Персоны</p>
               <IconUsersGroup className="text-yellow-300" size={40} />
           </div>
           {!isLoading ?
             <div>
                 <div className="flex justify-between items-center mb-2">
-                  <p className="text-lg">Количество людей</p>
+                  <p className="text-lg">Количество персон</p>
                   <p className="text-lg">{personCount}</p>
                 </div>
                 <div className="flex justify-between items-center">
@@ -162,39 +162,7 @@ export default function Statistic() {
 
       {/* Блок с пагинацией */}
       <div className="grid grid-cols-2 gap-8 ml-60 mt-10 mr-60">
-        {/* Левый блок с пагинацией (студии) */}
-        <div className="h-auto w-full bg-zinc-800 rounded-2xl p-4 shadow-xl shadow-zinc-500/20">
-          <p className="text-center text-yellow-300 font-bold text-2xl mb-4">Фильмы по студиям</p>
-          <div className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
-            <p className="text-amber-50 text-xl ml-4">Студия</p>
-            <p className="text-amber-50 text-xl mr-4">Количество фильмов</p>
-          </div>
-          {!isLoading ?
-            <div>
-              {currentStudioPageData?.map((item) => (
-                <div key={item.studioName} className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
-                  <p className="text-amber-50 text-base ml-4">{item.studioName}</p>
-                  <p className="text-amber-50 text-base mr-4">{item.movieCount}</p>
-                </div>
-              ))}
-              <div className="flex justify-center mt-4">
-                <Pagination
-                  total={studiosPages.length}
-                  value={activeStudioPage}
-                  onChange={setActiveStudioPage}
-                  size="lg"
-                  color="dark.4"
-                  styles={{ dots: { color: "#52525c" } }}
-                />
-            </div>
-          </div>
-          : 
-          <div className="flex justify-center items-center mt-6">
-              <p className="font-extralight flex justify-center items-center text-xl text-amber-50 h-40">Загрузка</p>
-              <Loader color="yellow" size="sm" className="ml-2"/>
-          </div>
-          }
-        </div>
+        
 
         {/* Правый блок с пагинацией (персоны) */}
         <div className="h-auto w-full bg-zinc-800 rounded-2xl p-4 shadow-xl shadow-zinc-500/20">
@@ -216,6 +184,40 @@ export default function Statistic() {
                   total={personsPages.length}
                   value={activePersonPage}
                   onChange={setActivePersonPage}
+                  size="lg"
+                  color="dark.4"
+                  styles={{ dots: { color: "#52525c" } }}
+                />
+            </div>
+          </div>
+          : 
+          <div className="flex justify-center items-center mt-6">
+              <p className="font-extralight flex justify-center items-center text-xl text-amber-50 h-40">Загрузка</p>
+              <Loader color="yellow" size="sm" className="ml-2"/>
+          </div>
+          }
+        </div>
+
+        {/* Левый блок с пагинацией (студии) */}
+        <div className="h-auto w-full bg-zinc-800 rounded-2xl p-4 shadow-xl shadow-zinc-500/20">
+          <p className="text-center text-yellow-300 font-bold text-2xl mb-4">Фильмы по студиям</p>
+          <div className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
+            <p className="text-amber-50 text-xl ml-4">Студия</p>
+            <p className="text-amber-50 text-xl mr-4">Количество фильмов</p>
+          </div>
+          {!isLoading ?
+            <div>
+              {currentStudioPageData?.map((item) => (
+                <div key={item.studioName} className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
+                  <p className="text-amber-50 text-base ml-4">{item.studioName}</p>
+                  <p className="text-amber-50 text-base mr-4">{item.movieCount}</p>
+                </div>
+              ))}
+              <div className="flex justify-center mt-4">
+                <Pagination
+                  total={studiosPages.length}
+                  value={activeStudioPage}
+                  onChange={setActiveStudioPage}
                   size="lg"
                   color="dark.4"
                   styles={{ dots: { color: "#52525c" } }}
