@@ -313,6 +313,22 @@ export default function Search() {
             size="lg"
             radius="md"
             allowDeselect
+            label="Год"
+            placeholder="Выберите год"
+            data={years}
+            value={filters.year}
+            disabled={isLoading}
+            onChange={(value) => handleInputChange("year", value || "")}
+            styles={{
+              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
+              dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
+            }}
+          />
+          <Select
+            className="text-amber-50"
+            size="lg"
+            radius="md"
+            allowDeselect
             label="Персона"
             placeholder="Выберите персону"
             data={persons}
@@ -350,22 +366,6 @@ export default function Search() {
             value={filters.country}
             disabled={isLoading}
             onChange={(value) => handleInputChange("country", value || "")}
-            styles={{
-              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
-              dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
-            }}
-          />
-          <Select
-            className="text-amber-50"
-            size="lg"
-            radius="md"
-            allowDeselect
-            label="Год"
-            placeholder="Выберите год"
-            data={years}
-            value={filters.year}
-            disabled={isLoading}
-            onChange={(value) => handleInputChange("year", value || "")}
             styles={{
               input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
               dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
