@@ -99,7 +99,7 @@ export default function Search() {
 
   // Состояние для пагинации
   const [activePage, setActivePage] = useState<number>(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 6;
 
   // Функция для разбиения массива на страницы
   function chunk<T>(array: T[], size: number): T[][] {
@@ -295,27 +295,12 @@ export default function Search() {
             size="lg"
             radius="md"
             allowDeselect
-            label="Персона"
-            placeholder="Выберите персону"
-            data={persons}
-            value={filters.person}
+            label="Год"
+            placeholder="Выберите год"
+            data={years}
+            value={filters.year}
             disabled={isLoading}
-            onChange={(value) => handleInputChange("person", value || "")}
-            styles={{
-              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
-              dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
-            }}
-          />
-          <Select
-            className="text-amber-50"
-            size="lg"
-            radius="md"
-            label="Студия"
-            placeholder="Выберите студию"
-            data={studios}
-            value={filters.studio}
-            disabled={isLoading}
-            onChange={(value) => handleInputChange("studio", value || "")}
+            onChange={(value) => handleInputChange("year", value || "")}
             styles={{
               input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
               dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
@@ -337,24 +322,40 @@ export default function Search() {
               dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
             }}
           />
-          <Select
-            className="text-amber-50"
+          {/* <Select
+            className="text-amber-50 invisible "
             size="lg"
             radius="md"
             allowDeselect
-            label="Год"
-            placeholder="Выберите год"
-            data={years}
-            value={filters.year}
+            label="Персона"
+            placeholder="Выберите персону"
+            data={persons}
+            value={filters.person}
             disabled={isLoading}
-            onChange={(value) => handleInputChange("year", value || "")}
+            onChange={(value) => handleInputChange("person", value || "")}
+            styles={{
+              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
+              dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
+            }}
+          />
+          <Select
+            className="text-amber-50 invisible "
+            size="lg"
+            radius="md"
+            label="Студия"
+            
+            placeholder="Выберите студию"
+            data={studios}
+            value={filters.studio}
+            disabled={isLoading}
+            onChange={(value) => handleInputChange("studio", value || "")}
             styles={{
               input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
               dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
             }}
           />
           <Input.Wrapper
-            className="text-amber-50"
+            className="text-amber-50 invisible "
             label="Рейтинг"
             size="md"
             error={ratingError}
@@ -373,7 +374,7 @@ export default function Search() {
                 },
               }}
             />
-          </Input.Wrapper>
+          </Input.Wrapper> */}
         </div>
       </div>
 
