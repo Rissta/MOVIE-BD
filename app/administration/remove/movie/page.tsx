@@ -324,7 +324,23 @@ export default function Search() {
               dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
             }}
           />
-          <Select
+                    <Select
+            className="text-amber-50"
+            size="lg"
+            radius="md"
+            allowDeselect
+            label="Страна"
+            placeholder="Выберите страну"
+            data={countries}
+            value={filters.country}
+            disabled={isLoading}
+            onChange={(value) => handleInputChange("country", value || "")}
+            styles={{
+              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
+              dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
+            }}
+          />
+          {/* <Select
             className="text-amber-50"
             size="lg"
             radius="md"
@@ -355,22 +371,6 @@ export default function Search() {
               dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
             }}
           />
-          <Select
-            className="text-amber-50"
-            size="lg"
-            radius="md"
-            allowDeselect
-            label="Страна"
-            placeholder="Выберите страну"
-            data={countries}
-            value={filters.country}
-            disabled={isLoading}
-            onChange={(value) => handleInputChange("country", value || "")}
-            styles={{
-              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
-              dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
-            }}
-          />
           <Input.Wrapper
             className="text-amber-50"
             label="Рейтинг"
@@ -391,7 +391,7 @@ export default function Search() {
                 },
               }}
             />
-          </Input.Wrapper>
+          </Input.Wrapper> */}
         </div>
       </div>
 
