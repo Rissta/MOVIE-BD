@@ -74,12 +74,13 @@ export default function AddMovie() {
       newErrors.duration = "Длительность должна быть числом.";
     else if (Number(formData.duration) < 30)
       newErrors.duration = "Минимальная длительность фильма - 30 минут.";
-    if (!formData.country) {
+    if (!formData.country)
       newErrors.country = "Страна обязательна.";
-    } else if (!/^[A-Z]{3}$/.test(formData.country)) {
-      newErrors.country = "Код страны должен состоять из 3 заглавных букв.";
+    if (!formData.language) { 
+      newErrors.language = "Язык обязателен.";
+    } else if (!/^[A-Z]{3}$/.test(formData.language)) {
+      newErrors.language = "Код языка должен состоять из 3 заглавных букв.";
     }
-      if (!formData.language) newErrors.language = "Язык обязателен.";
     if (!formData.releaseYear)
       newErrors.releaseYear = "Год выпуска обязателен.";
     else if (isNaN(Number(formData.releaseYear)))

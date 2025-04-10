@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { IconAward, IconBuildings, IconDatabase, IconMovie, IconStar, IconUsersGroup } from "@tabler/icons-react";
 import { Loader, Pagination } from "@mantine/core";
+import classes from '/app/components/paginationStat.module.css';
 
 // Определяем интерфейсы для данных
 interface Studio {
@@ -185,7 +186,7 @@ export default function Statistic() {
                   value={activePersonPage}
                   onChange={setActivePersonPage}
                   size="lg"
-                  color="dark.4"
+                  classNames={{control: classes.paginationControls}}
                   styles={{ dots: { color: "#52525c" } }}
                 />
             </div>
@@ -219,7 +220,7 @@ export default function Statistic() {
                   value={activeStudioPage}
                   onChange={setActiveStudioPage}
                   size="lg"
-                  color="dark.4"
+                  classNames={{control: classes.paginationControls}}
                   styles={{ dots: { color: "#52525c" } }}
                 />
             </div>
