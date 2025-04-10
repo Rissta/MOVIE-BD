@@ -22,6 +22,7 @@ model Movie {
   studio      Studio?         @relation(fields: [studioId], references: [id])
   persons     PersonOnMovie[]
   rating      Rating?
+  review      Review?
 }
 
 model Person {
@@ -66,4 +67,14 @@ model Award {
   awardDate String  @db.VarChar(30)
   movieId   String? @unique
   movie     Movie?  @relation(fields: [movieId], references: [id])
+}
+
+model Review {
+  id          String  @id @default(cuid())
+  reviewText  String  @db.VarChar(250)
+  authorName  String  @db.VarChar(60)
+  reviewDate  String  @db.VarChar(30)
+  reviewRating Decimal @default(0) @db.Decimal(2, 1)
+  movieId     String? @unique
+  movie       Movie?  @relation(fields: [movieId], references: [id])
 }
