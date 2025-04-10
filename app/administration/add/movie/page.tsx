@@ -460,7 +460,7 @@ export default function AddMovie() {
                 : null
             }
             styles={{
-              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
+              input: { backgroundColor: "#27272a", borderColor: errors.personIds ? "red" : "#27272a", color: "#71717b" },
               pill: { backgroundColor: "#ffdf20", color: "#171717", borderColor: "#ffdf20" },
             }}
             classNames={{ input: classesSelect.selectInput, dropdown: classesSelect.selectDropdown, option: classesSelect.selectOption}}
