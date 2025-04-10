@@ -10,6 +10,8 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
+import classes from '/app/components/pagination.module.css';
+import classesSelect from '/app/components/select.module.css';
 
 interface Studio {
   id: number;
@@ -195,10 +197,8 @@ export default function StudioDirectory() {
             value={filters.movie}
             disabled={isLoading}
             onChange={(value) => handleInputChange("movie", value || "")}
-            styles={{
-              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
-              dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
-            }}
+            classNames={{ input: classesSelect.selectInput, dropdown: classesSelect.selectDropdown, option: classesSelect.selectOption}}
+
           />
           <Select
             className="text-amber-50"
@@ -211,10 +211,8 @@ export default function StudioDirectory() {
             value={filters.country}
             disabled={isLoading}
             onChange={(value) => handleInputChange("country", value || "")}
-            styles={{
-              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
-              dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
-            }}
+            classNames={{ input: classesSelect.selectInput, dropdown: classesSelect.selectDropdown, option: classesSelect.selectOption}}
+
           />
         </div>
       </div>
@@ -293,7 +291,7 @@ export default function StudioDirectory() {
           total={paginatedData.length} // Общее количество страниц
           value={activePage} // Текущая страница
           onChange={setActivePage} // Обработчик изменения страницы
-          color="dark.4"
+          classNames={{control: classes.paginationControls}}
           size="xl"
           styles={{ dots: { color: "#52525c" } }}
         />

@@ -9,6 +9,8 @@ import {
   IconUsersGroup,
 } from "@tabler/icons-react";
 import { useDisclosure } from "@mantine/hooks";
+import classes from '/app/components/pagination.module.css';
+import classesSelect from '/app/components/select.module.css';
 
 // Интерфейсы для типизации данных
 interface Person {
@@ -285,10 +287,7 @@ export default function Search() {
             value={filters.genre}
             disabled={isLoading}
             onChange={(value) => handleInputChange("genre", value || "")}
-            styles={{
-              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
-              dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
-            }}
+            classNames={{ input: classesSelect.selectInput, dropdown: classesSelect.selectDropdown, option: classesSelect.selectOption}}
           />
           <Select
             className="text-amber-50"
@@ -301,10 +300,7 @@ export default function Search() {
             value={filters.year}
             disabled={isLoading}
             onChange={(value) => handleInputChange("year", value || "")}
-            styles={{
-              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
-              dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
-            }}
+            classNames={{ input: classesSelect.selectInput, dropdown: classesSelect.selectDropdown, option: classesSelect.selectOption}}
           />
           <Select
             className="text-amber-50"
@@ -317,10 +313,7 @@ export default function Search() {
             value={filters.country}
             disabled={isLoading}
             onChange={(value) => handleInputChange("country", value || "")}
-            styles={{
-              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
-              dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
-            }}
+            classNames={{ input: classesSelect.selectInput, dropdown: classesSelect.selectDropdown, option: classesSelect.selectOption}}
           />
           {/* <Select
             className="text-amber-50 invisible "
@@ -484,8 +477,8 @@ export default function Search() {
           total={paginatedData.length} // Общее количество страниц
           value={activePage} // Текущая страница
           onChange={setActivePage} // Обработчик изменения страницы
-          color="dark.4"
           size="xl"
+          classNames={{control: classes.paginationControls}}
           styles={{ dots: { color: "#52525c" } }}
         />
       </div>

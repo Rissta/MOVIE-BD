@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Input, Textarea, Select, Button, Loader } from "@mantine/core";
 import { IconCheck, IconCircleX, IconPlus, IconSelect } from "@tabler/icons-react";
+import classesSelect from '/app/components/select.module.css';
 
 // Интерфейс для данных о рецензии
 interface Review {
@@ -220,16 +221,10 @@ export default function AddReview() {
           onChange={handleMovieChange}
           styles={{
             input: {
-              backgroundColor: "#27272a",
               borderColor: errors.movieId ? "red" : "#27272a",
-              color: "#71717b",
-            },
-            dropdown: {
-              backgroundColor: "#27272a",
-              border: "3px solid #171717",
-              color: "#71717b",
-            },
+            }
           }}
+          classNames={{ input: classesSelect.selectInput, dropdown: classesSelect.selectDropdown, option: classesSelect.selectOption}}
           disabled={isLoading}
         />
         {isLoading && (

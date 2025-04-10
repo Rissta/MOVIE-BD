@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Input, MultiSelect, Button, Select, Textarea, Loader } from "@mantine/core";
 import { IconCheck, IconCircleX, IconPlus, IconSelect } from "@tabler/icons-react";
 import Link from "next/link";
+import classesSelect from '/app/components/select.module.css';
 
 interface Award {
   name?: string;
@@ -73,8 +74,12 @@ export default function AddMovie() {
       newErrors.duration = "Длительность должна быть числом.";
     else if (Number(formData.duration) < 30)
       newErrors.duration = "Минимальная длительность фильма - 30 минут.";
-    if (!formData.country) newErrors.country = "Страна обязательна.";
-    if (!formData.language) newErrors.language = "Язык обязателен.";
+    if (!formData.country) {
+      newErrors.country = "Страна обязательна.";
+    } else if (!/^[A-Z]{3}$/.test(formData.country)) {
+      newErrors.country = "Код страны должен состоять из 3 заглавных букв.";
+    }
+      if (!formData.language) newErrors.language = "Язык обязателен.";
     if (!formData.releaseYear)
       newErrors.releaseYear = "Год выпуска обязателен.";
     else if (isNaN(Number(formData.releaseYear)))
@@ -302,16 +307,10 @@ export default function AddMovie() {
               }
               styles={{
                 input: {
-                  backgroundColor: "#27272a",
                   borderColor: errors.country ? "red" : "#27272a",
-                  color: "#71717b",
-                },
-                dropdown: {
-                  backgroundColor: "#27272a",
-                  border: "3px solid #171717",
-                  color: "#71717b",
-                },
+                }
               }}
+              classNames={{ input: classesSelect.selectInput, dropdown: classesSelect.selectDropdown, option: classesSelect.selectOption}}
             />
             {isLoading && (
               <div className="flex justify-center mt-2 h-0">
@@ -371,16 +370,10 @@ export default function AddMovie() {
               }
               styles={{
                 input: {
-                  backgroundColor: "#27272a",
                   borderColor: errors.language ? "red" : "#27272a",
-                  color: "#71717b",
-                },
-                dropdown: {
-                  backgroundColor: "#27272a",
-                  border: "3px solid #171717",
-                  color: "#71717b",
-                },
+                }
               }}
+              classNames={{ input: classesSelect.selectInput, dropdown: classesSelect.selectDropdown, option: classesSelect.selectOption}}
             />
             {isLoading && (
               <div className="flex justify-center mt-2 h-0">
@@ -467,22 +460,10 @@ export default function AddMovie() {
                 : null
             }
             styles={{
-              input: {
-                backgroundColor: "#27272a",
-                borderColor: errors.personIds ? "red" : "#27272a",
-                color: "#71717b",
-              },
-              dropdown: {
-                backgroundColor: "#27272a",
-                border: "3px solid #171717",
-                color: "#71717b",
-              },
-              pill: {
-                backgroundColor: "#ffdf20",
-                color: "#171717",
-                borderColor: "#ffdf20",
-              },
+              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
+              pill: { backgroundColor: "#ffdf20", color: "#171717", borderColor: "#ffdf20" },
             }}
+            classNames={{ input: classesSelect.selectInput, dropdown: classesSelect.selectDropdown, option: classesSelect.selectOption}}
           />
           {isLoading && (
               <div className="flex justify-center mt-2 h-0">
@@ -507,16 +488,11 @@ export default function AddMovie() {
             }
             styles={{
               input: {
-                backgroundColor: "#27272a",
                 borderColor: errors.studioId ? "red" : "#27272a",
-                color: "#71717b",
-              },
-              dropdown: {
-                backgroundColor: "#27272a",
-                border: "3px solid #171717",
-                color: "#71717b",
-              },
+              }
             }}
+            classNames={{ input: classesSelect.selectInput, dropdown: classesSelect.selectDropdown, option: classesSelect.selectOption}}
+
           />
           {isLoading && (
               <div className="flex justify-center mt-2 h-0">

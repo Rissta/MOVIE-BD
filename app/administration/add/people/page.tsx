@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Input, MultiSelect, Button, Select, Loader } from "@mantine/core";
 import { IconCheck, IconCircleX, IconPlus, IconSelect } from "@tabler/icons-react";
+import classesSelect from '/app/components/select.module.css';
 
 // Интерфейс для данных о персоне
 interface Person {
@@ -186,16 +187,10 @@ export default function AddPeople() {
               }
               styles={{
                 input: {
-                  backgroundColor: "#27272a",
                   borderColor: errors.nationality ? "red" : "#27272a",
-                  color: "#71717b",
-                },
-                dropdown: {
-                  backgroundColor: "#27272a",
-                  border: "3px solid #171717",
-                  color: "#71717b",
-                },
+                }
               }}
+              classNames={{ input: classesSelect.selectInput, dropdown: classesSelect.selectDropdown, option: classesSelect.selectOption}}
               disabled={isLoading}
             />
             {isLoading && (
@@ -271,16 +266,10 @@ export default function AddPeople() {
               }
               styles={{
                 input: {
-                  backgroundColor: "#27272a",
                   borderColor: errors.role ? "red" : "#27272a",
-                  color: "#71717b",
-                },
-                dropdown: {
-                  backgroundColor: "#27272a",
-                  border: "3px solid #171717",
-                  color: "#71717b",
-                },
+                }
               }}
+              classNames={{ input: classesSelect.selectInput, dropdown: classesSelect.selectDropdown, option: classesSelect.selectOption}}
               disabled={isLoading}
             />
             {isLoading && (
@@ -356,9 +345,9 @@ export default function AddPeople() {
         }
         styles={{
           input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
-          dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
           pill: { backgroundColor: "#ffdf20", color: "#171717", borderColor: "#ffdf20" },
         }}
+        classNames={{ dropdown: classesSelect.selectDropdown, option: classesSelect.selectOption}}
       />
       {isLoading && (
         <div className="flex justify-center mt-2 h-0">

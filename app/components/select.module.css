@@ -1,0 +1,27 @@
+.selectInput {
+    background-color: #27272a;
+    border-color: #27272a;
+    color: #fffbeb;
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background-color: #27272a;
+        color: #fffbeb;
+    }
+    &::placeholder {
+        color: #fffbeb8f;
+    }
+  }
+.selectDropdown {
+    background-color: #27272a;
+    border-color: #27272a;
+    color: #fffbeb;
+    border: 1px solid #171717;
+}
+.selectOption {
+    &:active,
+    &:hover {
+        color: #171717;
+        background-color: #ffdf20;
+    }
+}
