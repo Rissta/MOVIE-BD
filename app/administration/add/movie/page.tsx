@@ -78,8 +78,8 @@ export default function AddMovie() {
       newErrors.country = "Страна обязательна.";
     if (!formData.language) { 
       newErrors.language = "Язык обязателен.";
-    } else if (!/^[A-Z]{3}$/.test(formData.language)) {
-      newErrors.language = "Код языка должен состоять из 3 заглавных букв.";
+    } else if (!/^[a-z]{3}$/.test(formData.language)) {
+      newErrors.language = "Код языка должен состоять из 3 строчных букв.";
     }
     if (!formData.releaseYear)
       newErrors.releaseYear = "Год выпуска обязателен.";
