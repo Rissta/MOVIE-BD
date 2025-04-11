@@ -79,7 +79,7 @@ export default function AddMovie() {
     if (!formData.language) { 
       newErrors.language = "Язык обязателен.";
     } else if (!/^[a-z]{3}$/.test(formData.language)) {
-      newErrors.language = "Код языка должен состоять из 3 строчных букв.";
+      newErrors.language = "Код языка должен состоять из 3 строчных, англиских букв.";
     }
     if (!formData.releaseYear)
       newErrors.releaseYear = "Год выпуска обязателен.";
