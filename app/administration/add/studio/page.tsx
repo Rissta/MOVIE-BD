@@ -29,20 +29,20 @@ export default function AddStudio() {
   const [isLoading, setIsLoading] = useState<boolean>(true); // Новое состояние для загрузки данных
   const [errors, setErrors] = useState<Record<string, string>>({}); // Ошибки валидации
 
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch("/api/administration/add/studio/select-data");
+      const data = await response.json();
+      setCountries(data.countries);
+      setMovies(data.movies);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch("/api/administration/add/studio/select-data");
-        const data = await response.json();
-        setCountries(data.countries);
-        setMovies(data.movies);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
     fetchData();
   }, []);
 

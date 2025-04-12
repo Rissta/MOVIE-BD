@@ -43,7 +43,6 @@ export default function AddMovie() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  useEffect(() => {
   const fetchData = async () => {
     try {
       setIsLoading(true); // Устанавливаем isLoading в true перед началом загрузки
@@ -59,8 +58,9 @@ export default function AddMovie() {
       setIsLoading(false); // Устанавливаем isLoading в false после завершения загрузки
     }
   };
-  fetchData();
-}, []);
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
