@@ -24,11 +24,11 @@ export default function Header() {
     { label: "Добавить фильм", href: "/administration/add/movie", icon: <IconSquareRoundedPlus size={24} /> },
     { label: "Добавить персону", href: "/administration/add/people", icon: <IconSquareRoundedPlus size={24} /> },
     { label: "Добавить студию", href: "/administration/add/studio", icon: <IconSquareRoundedPlus size={24} /> },
-    { label: "Добавить рецезнзию", href: "/administration/add/review", icon: <IconSquareRoundedPlus size={24} /> },
+    { label: "Добавить рецензию", href: "/administration/add/review", icon: <IconSquareRoundedPlus size={24} /> },
     { label: "Удалить фильм", href: "/administration/remove/movie", icon: <IconXboxX size={24} /> },
     { label: "Удалить персону", href: "/administration/remove/people", icon: <IconXboxX size={24} /> },
     { label: "Удалить студию", href: "/administration/remove/studio", icon: <IconXboxX size={24} /> },
-    { label: "Удалить рецезнзию", href: "/administration/add/review", icon: <IconXboxX size={24} /> },
+    { label: "Удалить рецензию", href: "/administration/add/review", icon: <IconXboxX size={24} /> },
   ];
   return (
     <header className="text-4xl flex bg-zinc-800 h-22 text-amber-50 align-middle items-center place-content-between">
