@@ -397,7 +397,7 @@ export default function AddMovie() {
                 onChange={handleInputChange}
                 size="lg"
                 radius="md"
-                placeholder="Введите язык"
+                placeholder="Введите код языка (eng)"
                 styles={{
                   input: {
                     backgroundColor: "#27272a",
