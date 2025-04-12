@@ -148,7 +148,7 @@ export default function AddPeople() {
             onChange={handleInputChange}
             size="lg"
             radius="md"
-            placeholder="Введите ФИО"
+            placeholder="Введите ФИО(Лаптев; Кирилл)"
             styles={{
               input: {
                 backgroundColor: "#27272a",
