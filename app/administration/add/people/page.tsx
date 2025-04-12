@@ -55,7 +55,17 @@ export default function AddPeople() {
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.name) newErrors.name = "ФИО обязательно.";
+    if (!formData.name) {
+      newErrors.name = "ФИО обязательно.";
+    } else {
+        const parts = formData.name.split(';');
+        if (parts.length < 2) {
+            newErrors.name = "ФИО должно содержать минимум фамилию и имя, разделенные точкой с запятой (;).";
+        } else {
+            // Дополнительные проверки можно добавить здесь, если потребуется
+            // Например, проверка на пустые значения или формат каждого элемента
+        }
+    }
     if (!formData.birthDate || !/^\d{4}\.(0[1-9]|1[0-2])\.(0[1-9]|[12][0-9]|3[01])$/.test(formData.birthDate))
       newErrors.birthDate = "Дата рождения должна быть в формате yyyy.mm.dd";
     if (!formData.nationality) newErrors.nationality = "Национальность обязательна.";

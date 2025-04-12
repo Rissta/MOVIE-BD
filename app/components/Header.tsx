@@ -29,7 +29,6 @@ export default function Header() {
     { label: "Удалить персону", href: "/administration/remove/people", icon: <IconXboxX size={24} /> },
     { label: "Удалить студию", href: "/administration/remove/studio", icon: <IconXboxX size={24} /> },
     { label: "Удалить рецезнизию", href: "/administration/add/review", icon: <IconXboxX size={24} /> },
-
   ];
   return (
     <header className="text-4xl flex bg-zinc-800 h-22 text-amber-50 align-middle items-center place-content-between">
