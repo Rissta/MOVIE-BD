@@ -1,8 +1,32 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { IconAward, IconBuildings, IconDatabase, IconMovie, IconStar, IconUsersGroup } from "@tabler/icons-react";
-import { Loader, Pagination } from "@mantine/core";
+import { Loader } from "@mantine/core";
 import classes from '/app/components/paginationStat.module.css';
+
+// Импорты для Chart.js
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+} from 'chart.js';
+import { Bar, Doughnut } from 'react-chartjs-2';
+
+// Регистрируем компоненты Chart.js
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement
+);
 
 // Определяем интерфейсы для данных
 interface Studio {
@@ -28,30 +52,11 @@ export default function Statistic() {
   const [persons, setPersons] = useState<Person[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-
-  // Функция для разбиения массива на страницы
-  function chunk<T>(array: T[], size: number): T[][] {
-    if (!array.length) return [];
-    const head = array.slice(0, size);
-    const tail = array.slice(size);
-    return [head, ...chunk(tail, size)];
-  }
-
-  // Состояние для отслеживания активной страницы студий
-  const [activeStudioPage, setActiveStudioPage] = useState<number>(1);
-  const studiosPages: Studio[][] = chunk(studios, 7);
-  const currentStudioPageData: Studio[] | undefined = studiosPages[activeStudioPage - 1];
-
-  // Состояние для отслеживания активной страницы персон
-  const [activePersonPage, setActivePersonPage] = useState<number>(1);
-  const personsPages: Person[][] = chunk(persons, 7);
-  const currentPersonPageData: Person[] | undefined = personsPages[activePersonPage - 1];
-
   // Эффект для загрузки данных из API
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setIsLoading(true); // Начало загрузки
+        setIsLoading(true);
         const response = await fetch("/api/statistic");
         if (!response.ok) {
           throw new Error("Не удалось получить данные");
@@ -77,6 +82,95 @@ export default function Statistic() {
 
     fetchData();
   }, []);
+
+  // Настройки для столбчатой диаграммы
+  const barOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top' as const,
+        labels: {
+          color: '#fef3c7',
+        }
+      },
+      title: {
+        display: true,
+        color: '#fef3c7',
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: '#fef3c7',
+        },
+        grid: {
+          color: '#52525b',
+        }
+      },
+      y: {
+        ticks: {
+          color: '#fef3c7',
+        },
+        grid: {
+          color: '#52525b',
+        }
+      },
+    },
+  };
+
+  // Данные для графика студий (топ-10)
+  const studiosChartData = {
+    labels: studios.slice(0, 10).map(studio => studio.studioName),
+    datasets: [
+      {
+        label: 'Количество фильмов',
+        data: studios.slice(0, 10).map(studio => studio.movieCount),
+        backgroundColor: 'rgba(250, 204, 21, 0.7)',
+        borderColor: 'rgba(250, 204, 21, 1)',
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  // Данные для графика персон (топ-10)
+  const personsChartData = {
+    labels: persons.slice(0, 10).map(person => person.personName),
+    datasets: [
+      {
+        label: 'Количество фильмов',
+        data: persons.slice(0, 10).map(person => person.movieCount),
+        backgroundColor: 'rgba(34, 197, 94, 0.7)',
+        borderColor: 'rgba(34, 197, 94, 1)',
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  // Данные для круговой диаграммы (топ-5 студий)
+  const studiosDoughnutData = {
+    labels: studios.slice(0, 5).map(studio => studio.studioName),
+    datasets: [
+      {
+        label: 'Количество фильмов',
+        data: studios.slice(0, 5).map(studio => studio.movieCount),
+        backgroundColor: [
+          'rgba(250, 204, 21, 0.7)',
+          'rgba(34, 197, 94, 0.7)',
+          'rgba(59, 130, 246, 0.7)',
+          'rgba(168, 85, 247, 0.7)',
+          'rgba(239, 68, 68, 0.7)',
+        ],
+        borderColor: [
+          'rgba(250, 204, 21, 1)',
+          'rgba(34, 197, 94, 1)',
+          'rgba(59, 130, 246, 1)',
+          'rgba(168, 85, 247, 1)',
+          'rgba(239, 68, 68, 1)',
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
 
   return (
     <div className="text-amber-50">
@@ -135,6 +229,7 @@ export default function Statistic() {
           </div>
             }
         </div>
+
         {/* Блок "Студии" */}
         <div className="h-auto w-full bg-zinc-800 rounded-4xl p-4 shadow-xl shadow-zinc-500/20">
           <div className="flex justify-between items-center mb-4">
@@ -161,76 +256,73 @@ export default function Statistic() {
         </div>
       </div>
 
-      {/* Блок с пагинацией */}
+      {/* Блок с графиками */}
       <div className="grid grid-cols-2 gap-8 ml-60 mt-10 mr-60">
         
-
-        {/* Правый блок с пагинацией (персоны) */}
+        {/* Левый блок с графиком студий */}
         <div className="h-auto w-full bg-zinc-800 rounded-2xl p-4 shadow-xl shadow-zinc-500/20">
-          <p className="text-center text-yellow-300 font-bold text-2xl mb-4">Фильмы у персон</p>
-          <div className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
-            <p className="text-amber-50 text-xl ml-4">Персона</p>
-            <p className="text-amber-50 text-xl mr-4">Количество фильмов</p>
-          </div>
-          {!isLoading ?
-            <div>
-              {currentPersonPageData?.map((item) => (
-                <div key={item.personName} className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
-                  <p className="text-amber-50 text-base ml-4">{item.personName}</p>
-                  <p className="text-amber-50 text-base mr-4">{item.movieCount}</p>
-                </div>
-              ))}
-              <div className="flex justify-center mt-4">
-                <Pagination
-                  total={personsPages.length}
-                  value={activePersonPage}
-                  onChange={setActivePersonPage}
-                  size="lg"
-                  classNames={{control: classes.paginationControls}}
-                  styles={{ dots: { color: "#52525c" } }}
-                />
+          <p className="text-center text-yellow-300 font-bold text-2xl mb-4">
+            Топ-10 студий по количеству фильмов
+          </p>
+          {!isLoading ? (
+            <div className="h-80">
+              <Bar options={barOptions} data={studiosChartData} />
             </div>
-          </div>
-          : 
-          <div className="flex justify-center items-center mt-6">
-              <p className="font-extralight flex justify-center items-center text-xl text-amber-50 h-40">Загрузка</p>
+          ) : (
+            <div className="flex justify-center items-center h-40">
+              <p className="font-extralight flex justify-center items-center text-xl text-amber-50">Загрузка</p>
               <Loader color="yellow" size="sm" className="ml-2"/>
-          </div>
-          }
+            </div>
+          )}
         </div>
 
-        {/* Левый блок с пагинацией (студии) */}
+        {/* Правый блок с графиком персон */}
         <div className="h-auto w-full bg-zinc-800 rounded-2xl p-4 shadow-xl shadow-zinc-500/20">
-          <p className="text-center text-yellow-300 font-bold text-2xl mb-4">Фильмы по студиям</p>
-          <div className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
-            <p className="text-amber-50 text-xl ml-4">Студия</p>
-            <p className="text-amber-50 text-xl mr-4">Количество фильмов</p>
-          </div>
-          {!isLoading ?
-            <div>
-              {currentStudioPageData?.map((item) => (
-                <div key={item.studioName} className="flex justify-between items-center border-b-3 border-zinc-700 py-2">
-                  <p className="text-amber-50 text-base ml-4">{item.studioName}</p>
-                  <p className="text-amber-50 text-base mr-4">{item.movieCount}</p>
-                </div>
-              ))}
-              <div className="flex justify-center mt-4">
-                <Pagination
-                  total={studiosPages.length}
-                  value={activeStudioPage}
-                  onChange={setActiveStudioPage}
-                  size="lg"
-                  classNames={{control: classes.paginationControls}}
-                  styles={{ dots: { color: "#52525c" } }}
-                />
+          <p className="text-center text-yellow-300 font-bold text-2xl mb-4">
+            Топ-10 персон по количеству фильмов
+          </p>
+          {!isLoading ? (
+            <div className="h-80 m-auto">
+              <Bar options={barOptions} data={personsChartData} />
             </div>
-          </div>
-          : 
-          <div className="flex justify-center items-center mt-6">
-              <p className="font-extralight flex justify-center items-center text-xl text-amber-50 h-40">Загрузка</p>
+          ) : (
+            <div className="flex justify-center items-center h-40">
+              <p className="font-extralight flex justify-center items-center text-xl text-amber-50">Загрузка</p>
               <Loader color="yellow" size="sm" className="ml-2"/>
-          </div>
-          }
+            </div>
+          )}
+        </div>
+
+        {/* Дополнительный блок с круговой диаграммой */}
+        <div className="h-auto w-full bg-zinc-800 rounded-2xl p-4 shadow-xl shadow-zinc-500/20 col-span-2 mb-10">
+          <p className="text-center text-yellow-300 font-bold text-2xl mb-4">
+            Распределение фильмов по топ-5 студиям
+          </p>
+          {!isLoading ? (
+            <div className="h-80 flex justify-center">
+              <div className="w-80">
+                <Doughnut 
+                  data={studiosDoughnutData} 
+                  options={{
+                    responsive: true,
+                    plugins: {
+                      legend: {
+                        position: 'bottom' as const,
+                        labels: {
+                          color: '#fef3c7',
+                        }
+                      },
+                    },
+                  }}
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="flex justify-center items-center h-40">
+              <p className="font-extralight flex justify-center items-center text-xl text-amber-50">Загрузка</p>
+              <Loader color="yellow" size="sm" className="ml-2"/>
+            </div>
+          )}
         </div>
       </div>
     </div>

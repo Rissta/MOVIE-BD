@@ -315,59 +315,6 @@ export default function Search() {
             onChange={(value) => handleInputChange("country", value || "")}
             classNames={{ input: classesSelect.selectInput, dropdown: classesSelect.selectDropdown, option: classesSelect.selectOption}}
           />
-          {/* <Select
-            className="text-amber-50 invisible "
-            size="lg"
-            radius="md"
-            allowDeselect
-            label="Персона"
-            placeholder="Выберите персону"
-            data={persons}
-            value={filters.person}
-            disabled={isLoading}
-            onChange={(value) => handleInputChange("person", value || "")}
-            styles={{
-              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
-              dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
-            }}
-          />
-          <Select
-            className="text-amber-50 invisible "
-            size="lg"
-            radius="md"
-            label="Студия"
-            
-            placeholder="Выберите студию"
-            data={studios}
-            value={filters.studio}
-            disabled={isLoading}
-            onChange={(value) => handleInputChange("studio", value || "")}
-            styles={{
-              input: { backgroundColor: "#27272a", borderColor: "#27272a", color: "#71717b" },
-              dropdown: { backgroundColor: "#27272a", border: "3px solid #171717", color: "#71717b" },
-            }}
-          />
-          <Input.Wrapper
-            className="text-amber-50 invisible "
-            label="Рейтинг"
-            size="md"
-            error={ratingError}
-          >
-            <Input
-              size="lg"
-              radius="md"
-              placeholder="От"
-              onChange={handleRatingChange}
-              value={filters.minRating || ""}
-              styles={{
-                input: {
-                  backgroundColor: "#27272a",
-                  borderColor: ratingError ? "red" : "#27272a",
-                  color: "#71717b",
-                },
-              }}
-            />
-          </Input.Wrapper> */}
         </div>
       </div>
 
